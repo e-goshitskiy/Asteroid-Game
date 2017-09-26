@@ -190,24 +190,30 @@ window.addEventListener('load', function ()
 
         function loadWeapon()
         {
-            weapons.pulseLazer = new NewWeapon(2, 10, 15, 100, 10, 'red');
-            weapons.lazer = new NewWeapon(4, 30, 12, 200, 40, 'red');
-            weapons.greenLazer = new NewWeapon(6, 40, 10, 300, 80, 'green');
-            weapons.rocket = new NewWeapon(6, 30, 3, 350, 120, 'blue');
-            weapons.photonGun = new NewWeapon(6, 60, 6, 400, 150, 'yellow');
+            weapons.pulseLazer = new NewWeapon(2, 10, 15, 100, 20, 10, 'red');
+            weapons.lazer = new NewWeapon(4, 30, 12, 200, 40, 40, 'red');
+            weapons.greenLazer = new NewWeapon(6, 40, 10, 300, 30, 80, 'green');
+            weapons.rocket = new NewWeapon(6, 30, 3, 350, 40, 120, 'blue');
+            weapons.photonGun = new NewWeapon(6, 60, 6, 400, 60, 150, 'yellow');
         }
 
-        function NewWeapon(width, height, speed, timeoutFiringRate, power, color)
+        function NewWeapon(width, height, speed, timeoutFiringRate, offsetStartShot, power, color)
         {
             this.width = width;
             this.height = height;
             this.speed = speed;
             this.timeoutFiringRate = timeoutFiringRate;
             this.x = playership.x;
-            this.y = playership.y - 30;
+            this.y = playership.y - offsetStartShot;
             this.power = power;
             this.color = color;
             this.hpPerSec = power / timeoutFiringRate * 1000;
+            this.drawShotThisWeapon = function (i)
+            {
+                let curShot = curWeapon[i];
+                context.fillStyle = curShot.color;
+                context.fillRect(curShot.x, curShot.y, curShot.width, curShot.height);
+            }
         }
 
         let curWeapon = [];
@@ -232,9 +238,7 @@ window.addEventListener('load', function ()
         {
             for (let i = 0; i < curWeapon.length; i++)
             {
-                let curShot = curWeapon[i];
-                context.fillStyle = curShot.color;
-                context.fillRect(curShot.x, curShot.y, curShot.width, curShot.height);
+                curWeapon.drawShotThisWeapon(i);
             }
         }
 
@@ -554,8 +558,6 @@ window.addEventListener('load', function ()
                 moveShot();
                 moveBackground();
             }
-            else
-                drawPause();
             checkCollisions();
             checkHitAsteroid();
             drawBackground();
@@ -563,6 +565,8 @@ window.addEventListener('load', function ()
             drawScore();
             drawLevel1();
             timeoutStartAsteroid();
+            if (pause)
+                drawPause();
             if (!isGameOver)
             {
                 drawPlayership();
