@@ -233,7 +233,7 @@ window.addEventListener('load', function ()
 
         PowerLaser.prototype = new AbstractShell;
         PowerLaser.prototype.speed = 10;
-        PowerLaser.prototype.timeoutFiringRate = 175;
+        PowerLaser.prototype.timeoutFiringRate = 1000;
         PowerLaser.prototype.power = 23;
         PowerLaser.prototype.image = images.shell2;
         PowerLaser.prototype.numberShell = 2;
@@ -246,7 +246,7 @@ window.addEventListener('load', function ()
 
         GreenLaser.prototype = new AbstractShell;
         GreenLaser.prototype.speed = 15;
-        GreenLaser.prototype.timeoutFiringRate = 150;
+        GreenLaser.prototype.timeoutFiringRate = 1000;
         GreenLaser.prototype.power = 25;
         GreenLaser.prototype.image = images.shell3;
         GreenLaser.prototype.numberShell = 3;
@@ -259,7 +259,7 @@ window.addEventListener('load', function ()
 
         BlueLaser.prototype = new AbstractShell;
         BlueLaser.prototype.speed = 12;
-        BlueLaser.prototype.timeoutFiringRate = 175;
+        BlueLaser.prototype.timeoutFiringRate = 1000;
         BlueLaser.prototype.power = 35;
         BlueLaser.prototype.image = images.shell4;
         BlueLaser.prototype.numberShell = 4;
@@ -272,7 +272,7 @@ window.addEventListener('load', function ()
 
         MiniPhotonGun.prototype = new AbstractShell;
         MiniPhotonGun.prototype.speed = 20;
-        MiniPhotonGun.prototype.timeoutFiringRate = 400;
+        MiniPhotonGun.prototype.timeoutFiringRate = 1000;
         MiniPhotonGun.prototype.power = 100;
         MiniPhotonGun.prototype.image = images.shell5;
         MiniPhotonGun.prototype.numberShell = 5;
@@ -299,7 +299,7 @@ window.addEventListener('load', function ()
 
         Rocket.prototype = new AbstractShell;
         Rocket.prototype.speed = 5;
-        Rocket.prototype.timeoutFiringRate = 300;
+        Rocket.prototype.timeoutFiringRate = 1000;
         Rocket.prototype.power = 150;
         Rocket.prototype.image = images.rocket;
         Rocket.prototype.numberShell = 7;
@@ -314,15 +314,25 @@ window.addEventListener('load', function ()
         function checkCurShell()
         {
             if (score >= 20 && score < 100)
-                curShell = PowerLaser;
+            {
+                changeCurShellTo(PowerLaser);
+            }
             else if (score >= 100 && score < 200)
-                curShell = GreenLaser;
+            {
+                changeCurShellTo(GreenLaser);
+            }
             else if (score >= 200 && score < 300)
-                curShell = BlueLaser;
+            {
+                changeCurShellTo(BlueLaser);
+            }
             else if (score >= 200 && score < 300)
-                curShell = MiniPhotonGun;
+            {
+                changeCurShellTo(MiniPhotonGun);
+            }
             else if (score >= 300)
-                curShell = Rocket;
+            {
+                changeCurShellTo(Rocket);
+            }
             // if (score < 500)
             //     curShell = PulseLaser;
             // else if (score >= 500 && score < 1000)
@@ -335,6 +345,17 @@ window.addEventListener('load', function ()
             //     curShell = MiniPhotonGun;
             // else if (score >= 5000)
             //     curShell = Rocket;
+        }
+
+
+        function changeCurShellTo(newShell)
+        {
+            if (curShell === newShell)
+                return;
+
+            curShell = newShell;
+
+            restartFiring();
         }
 
 
@@ -430,7 +451,7 @@ window.addEventListener('load', function ()
 
                 let k = 7;
                 // for (let k = 1; k <= 10;)
-                     let curImage = images['explosion' + k];
+                let curImage = images['explosion' + k];
                 context.drawImage(curImage, explosion.x - explosion.size / 2, explosion.y - explosion.size / 2);
             }
 
@@ -627,80 +648,113 @@ window.addEventListener('load', function ()
 // управление кнопками кораблем  и выстрелами
 
         let horisontalMovement = 0;
-        let timerId;
-        let checkInterval = true;
+        let shotIntervalId = -1;
         let pause = false;
         let lastNumberShell = 1;
 
-        window.addEventListener('keyup', (e) =>
+
+        function startFiring()
         {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-
-            let keyCode = e['keyCode'];
-
-            switch (keyCode)
+            if (shotIntervalId === -1)
             {
-                // пробел
-                case 32:
-                    checkInterval = true;
-                    clearTimeout(timerId);
-                    break;
-                // стрелка влево
-                case 37:
-                    horisontalMovement = 0;
-                    break;
-                // стрелка вправо
-                case 39:
-                    horisontalMovement = 0;
-                    break;
+                shotIntervalId = setInterval(addShot, curShell.prototype.timeoutFiringRate);
             }
+        }
 
-        });
-        window.addEventListener('keydown', (e) =>
+        function stopFiring()
         {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-
-            let keyCode = e['keyCode'];
-
-            switch (keyCode)
+            if (shotIntervalId !== -1)
             {
-                // пробел
-                case 32:
-                    let shot = new curShell();
-                    if (checkInterval && !pause)
-                    {
-                        addShot();
-                        timerId = setInterval(addShot, shot.timeoutFiringRate);
-                        checkInterval = false;
-                    }
-                    if (shot.numberShell !== lastNumberShell)
-                    {
-                        checkInterval = true;
-                        clearTimeout(timerId);
-                        lastNumberShell = shot.numberShell;
-                    }
-                    break;
-                // стрелка влево
-                case 37:
-                    horisontalMovement = -1;
-                    break;
-                // стрелка вправо
-                case 39:
-                    horisontalMovement = 1;
-                    break;
-                // пауза
-                case 80:
-                    (!pause) ? pause = true : pause = false;
-                    // if (!pause)
-                    //     pause = true;
-                    // else
-                    //     pause = false;
-                    break;
+                clearInterval(shotIntervalId);
+                shotIntervalId = -1;
             }
-        });
+        }
 
+        function restartFiring()
+        {
+            stopFiring();
+            startFiring();
+        }
+
+        function isFiring()
+        {
+            return shotIntervalId !== -1;
+        }
+
+        window.addEventListener('keyup',
+            function (e)
+            {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                let keyCode = e['keyCode'];
+
+                switch (keyCode)
+                {
+                    // пробел
+                    case 32:
+                        stopFiring();
+                        // checkInterval = true;
+                        // clearTimeout(shotIntervalId);
+                        break;
+                    // стрелка влево
+                    case 37:
+                        horisontalMovement = 0;
+                        break;
+                    // стрелка вправо
+                    case 39:
+                        horisontalMovement = 0;
+                        break;
+                }
+
+            });
+
+        window.addEventListener('keydown',
+            function (e)
+            {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                let keyCode = e['keyCode'];
+
+                switch (keyCode)
+                {
+                    // пробел
+                    case 32:
+                        startFiring();
+
+                        // let shot = new curShell();
+                        // if (checkInterval && !pause)
+                        // {
+                        //     addShot();
+                        //     shotIntervalId = setInterval(addShot, shot.timeoutFiringRate);
+                        //     checkInterval = false;
+                        // }
+                        // if (shot.numberShell !== lastNumberShell)
+                        // {
+                        //     checkInterval = true;
+                        //     clearTimeout(shotIntervalId);
+                        //     lastNumberShell = shot.numberShell;
+                        // }
+                        break;
+                    // стрелка влево
+                    case 37:
+                        horisontalMovement = -1;
+                        break;
+                    // стрелка вправо
+                    case 39:
+                        horisontalMovement = 1;
+                        break;
+                    // пауза
+                    case 80:
+                        (!pause) ? pause = true : pause = false;
+                        // if (!pause)
+                        //     pause = true;
+                        // else
+                        //     pause = false;
+                        break;
+                }
+            });
 
 // вызов функций
 
