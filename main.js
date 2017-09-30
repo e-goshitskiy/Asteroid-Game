@@ -318,15 +318,15 @@ window.addEventListener('load', function ()
 
         function checkCurShell()
         {
-            if (score >= 20 && score < 100)
+            if (score >= 40 && score < 100)
                 changeCurShellTo(PowerLaser);
-            else if (score >= 100 && score < 200)
+            else if (score >= 100 && score < 300)
                 changeCurShellTo(GreenLaser);
-            else if (score >= 200 && score < 300)
+            else if (score >= 300 && score < 400)
                 changeCurShellTo(BlueLaser);
-            else if (score >= 200 && score < 300)
+            else if (score >= 400 && score < 800)
                 changeCurShellTo(MiniPhotonGun);
-            else if (score >= 300)
+            else if (score >= 800)
                 changeCurShellTo(Rocket);
             // if (score < 500)
             //     curShell = PulseLaser;
@@ -704,8 +704,11 @@ window.addEventListener('load', function ()
 
         function restartFiring()
         {
-            stopFiring();
-            startFiring();
+            if (shotIntervalId !== -1)
+            {
+                clearInterval(shotIntervalId);
+                shotIntervalId = setInterval(addShot, curShell.prototype.timeoutFiringRate);
+            }
         }
 
 
@@ -747,7 +750,6 @@ window.addEventListener('load', function ()
                 // пробел
                 case 32:
                     startFiring();
-
                     // let shot = new curShell();
                     // if (checkInterval && !pause)
                     // {
@@ -820,7 +822,7 @@ window.addEventListener('load', function ()
         }
 
         addPlayership();
-        intervalAddAsteroid(1, 5000);
+        intervalAddAsteroid(1, 8000);
         setInterval(tick, 1000 / 60);
         tick();
     }
