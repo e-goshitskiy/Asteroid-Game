@@ -693,6 +693,8 @@ window.addEventListener('load', function ()
             setTimeout(function ()
             {
                 isGameOver = true;
+                let audio = document.getElementById('audio');
+                changeAudioSrc(audioSrc.gameOver);
             }, 400);
         }
 
@@ -705,21 +707,63 @@ window.addEventListener('load', function ()
         }
 
 
+// звук
+
+        let audioSrc = {};
+        audioSrc.homeScreen = "music/home_screen2.mp3";
+        audioSrc.level1 = "music/level.mp3";
+        audioSrc.gameOver = "music/Game_Over.mp3";
+
+        function createAudio(src)
+        {
+            let audio = document.createElement('audio');
+            audio.id = 'audio';
+            audio.setAttribute('src', src);
+            audio.setAttribute('autoplay', 'autoplay');
+            audio.setAttribute('loop', 'loop');
+            document.body.appendChild(audio);
+        }
+
+        function changeAudioSrc(src)
+        {
+            let audio = document.getElementById('audio');
+            audio.setAttribute('src', src);
+        }
+
+        // document.body.replaceChild(music.level, music.gameOver);
+        // let d1 = document.getElementById('audio');
+        // d1.remove();
+        // document.body.appendChild();
+
+
 // рисуем жизнь
 
         function drawLife()
         {
-            // context.font = '40pt Calibri';
-            // context.fillStyle = 'red';
-            // context.fillText('Shield: ' + Math.ceil(playership.life), 10, 100);
-            context.fillStyle = 'rgba(255,50,255,0.5)';
+            let blueRGB = Math.floor(playership.life / 2);
+            function redRGB()
+            {
+                if (blueRGB > 200)
+                    return 0;
+                else if (blueRGB > 150)
+                    return 50;
+                else if (blueRGB > 100)
+                    return 150;
+                else if (blueRGB > 50)
+                    return 200;
+                else
+                    return 250;
+
+            }
+            context.fillStyle = 'rgba(' + redRGB() + ',50,' + blueRGB + ',0.7)';
+            console.log(blueRGB);
             context.fillRect(10, 80, playership.life / 2, 30);
             context.fillStyle = 'black';
             context.lineWidth = 4;
             context.strokeRect(10, 80, 250, 30);
             context.font = 'italic 18pt Calibri';
             context.textAlign = 'left';
-            context.fillStyle = 'blue';
+            context.fillStyle = '#C8C8FF';
             context.fillText(('Shield'), 22, 102);
         }
 
@@ -929,6 +973,8 @@ window.addEventListener('load', function ()
                 drawLife();
                 recoveryShield(0.03);
             }
+
+
             else
                 drawGameOver();
             drawExplosion();
@@ -937,6 +983,7 @@ window.addEventListener('load', function ()
         }
 
         addPlayership();
+        createAudio(audioSrc.level1);
         intervalAddAsteroid(1, 10000);
         setInterval(tick, 1000 / 60);
         tick();
