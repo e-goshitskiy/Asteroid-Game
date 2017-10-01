@@ -5,10 +5,14 @@ window.addEventListener('load', function ()
         let context = canvas.getContext('2d');
 
 
-// загрузка изображений
+        // --------------------------------------------------------------------------------
+        // изображения
+        // --------------------------------------------------------------------------------
+
+
         let images = {};
 
-        function loadImages()
+        function initImages()
         {
             images.background = loadImage('assets/backgrounds/1.png');
             images.playership = loadImage('assets/playerships/1.png');
@@ -29,10 +33,46 @@ window.addEventListener('load', function ()
             return image;
         }
 
-        loadImages();
+
+        initImages();
 
 
-// рисуем бэкграунд
+        // --------------------------------------------------------------------------------
+        // звук
+        // --------------------------------------------------------------------------------
+
+
+        let audioSrc = {};
+        audioSrc.homeScreen = "music/home_screen2.mp3";
+        audioSrc.level1 = "music/level.mp3";
+        audioSrc.gameOver = "music/Game_Over.mp3";
+
+        function initAudio(src)
+        {
+            let audio = document.createElement('audio');
+            audio.id = 'audio';
+            audio.setAttribute('src', src);
+            audio.setAttribute('autoplay', 'autoplay');
+            audio.setAttribute('loop', 'loop');
+            document.body.appendChild(audio);
+        }
+
+        function playAudio(src)
+        {
+            let audio = document.getElementById('audio');
+            audio.setAttribute('src', src);
+        }
+
+        // document.body.replaceChild(music.level, music.gameOver);
+        // let d1 = document.getElementById('audio');
+        // d1.remove();
+        // document.body.appendChild();
+
+
+        // --------------------------------------------------------------------------------
+        // бэкграунд
+        // --------------------------------------------------------------------------------
+
 
         let y1 = -605;
 
@@ -60,7 +100,11 @@ window.addEventListener('load', function ()
                 y3 -= 605 * 3;
         }
 
-// рисуем астероиды
+
+        // --------------------------------------------------------------------------------
+        // астероиды
+        // --------------------------------------------------------------------------------
+
 
         let asteroids = [];
 
@@ -130,11 +174,14 @@ window.addEventListener('load', function ()
                 }
                 if (!asteroids.length)
                     endLevel1 = true;
-
             }
         }
 
-// рисуем осколки астероидов
+
+        // --------------------------------------------------------------------------------
+        // осколки астероидов
+        // --------------------------------------------------------------------------------
+
 
         let splinters = [];
 
@@ -185,7 +232,10 @@ window.addEventListener('load', function ()
         }
 
 
-// рисуем корабль
+        // --------------------------------------------------------------------------------
+        // корабль
+        // --------------------------------------------------------------------------------
+
 
         let playership = {};
 
@@ -234,18 +284,20 @@ window.addEventListener('load', function ()
                 }
             }
 
-
             playership.x += playership.horisontalGas;
+
             if (playership.x < 10)
                 playership.x = 10;
+
             if (playership.x > 590)
                 playership.x = 590;
-
-
         }
 
 
-// набор снарядов для выстрела
+        // --------------------------------------------------------------------------------
+        // набор снарядов для выстрела
+        // --------------------------------------------------------------------------------
+
 
         let shells = {};
 
@@ -361,7 +413,10 @@ window.addEventListener('load', function ()
         // Rocket.prototype.hpPerSec = 1000;
 
 
-// рисуем выстрелы
+        // --------------------------------------------------------------------------------
+        // выстрелы
+        // --------------------------------------------------------------------------------
+
 
         let shots = [];
         let curShell = PulseLaser;
@@ -432,11 +487,15 @@ window.addEventListener('load', function ()
         }
 
 
-// рисуем взрывы
+        // --------------------------------------------------------------------------------
+        // взрывы
+        // --------------------------------------------------------------------------------
+
 
         let explosions = [];
         let previousTickTime = 0;
         let timeRatio = 10;  // время жизни взрыва (коэф.)
+
 
         function addExplosion(size, speed, x, offsetX, y, timeRatio)
         {
@@ -455,7 +514,8 @@ window.addEventListener('load', function ()
             }
         }
 
-        function drawExplosion()
+
+        function drawExplosions()
         {
             for (let i = 0; i < explosions.length; i++)
             {
@@ -486,7 +546,8 @@ window.addEventListener('load', function ()
 
         }
 
-        function moveExplosion()
+
+        function moveExplosions()
         {
             for (let i = 0; i < explosions.length; i++)
             {
@@ -497,9 +558,12 @@ window.addEventListener('load', function ()
         }
 
 
-// столкновение корабля с астероидом
+        // --------------------------------------------------------------------------------
+        // столкновение корабля с астероидом
+        // --------------------------------------------------------------------------------
 
-        function checkCollisions()
+
+        function checkPlayershipAndAsteroidsCollisions()
         {
             for (let i = 0; i < asteroids.length; i++)
             {
@@ -519,6 +583,7 @@ window.addEventListener('load', function ()
             }
         }
 
+
         function hitPlayership(hp)
         {
             playership.life -= hp;
@@ -531,9 +596,12 @@ window.addEventListener('load', function ()
         }
 
 
-// столкновение снаряда с астероидом
+        // --------------------------------------------------------------------------------
+        // столкновение снаряда с астероидом
+        // --------------------------------------------------------------------------------
 
-        function checkHitAsteroid()
+
+        function checkShellsAndAsteroidsCollisions()
         {
             for (let i = 0; i < asteroids.length; i++)
             {
@@ -582,9 +650,13 @@ window.addEventListener('load', function ()
             indexShell--;
         }
 
-// столкновение корабля с осколком
 
-        function checkCollisionWithSplinter()
+        // --------------------------------------------------------------------------------
+        // столкновение корабля с осколком
+        // --------------------------------------------------------------------------------
+
+
+        function checkPlayershipAndSplintersCollisions()
         {
             for (let i = 0; i < splinters.length; i++)
             {
@@ -604,9 +676,13 @@ window.addEventListener('load', function ()
             }
         }
 
-// столкновение снаряда с осколком
 
-        function checkHitSplinter()
+        // --------------------------------------------------------------------------------
+        // столкновение снаряда с осколком
+        // --------------------------------------------------------------------------------
+
+
+        function checkShellsAndSplintersCollisions()
         {
             for (let i = 0; i < splinters.length; i++)
             {
@@ -645,7 +721,10 @@ window.addEventListener('load', function ()
         }
 
 
-// начало игры уровень 1
+        // --------------------------------------------------------------------------------
+        // начало игры уровень 1
+        // --------------------------------------------------------------------------------
+
 
         let level1 = true;
         setTimeout(function ()
@@ -667,7 +746,10 @@ window.addEventListener('load', function ()
         }
 
 
-// рисуем пройденный уровень
+        // --------------------------------------------------------------------------------
+        // пройденный уровень
+        // --------------------------------------------------------------------------------
+
 
         let endLevel1 = false;
 
@@ -684,7 +766,11 @@ window.addEventListener('load', function ()
             }
         }
 
-// рисуем конец игры
+
+        // --------------------------------------------------------------------------------
+        // конец игры
+        // --------------------------------------------------------------------------------
+
 
         let isGameOver = false;
 
@@ -694,7 +780,7 @@ window.addEventListener('load', function ()
             {
                 isGameOver = true;
                 let audio = document.getElementById('audio');
-                changeAudioSrc(audioSrc.gameOver);
+                playAudio(audioSrc.gameOver);
             }, 400);
         }
 
@@ -707,40 +793,31 @@ window.addEventListener('load', function ()
         }
 
 
-// звук
+        // --------------------------------------------------------------------------------
+        // пауза
+        // --------------------------------------------------------------------------------
 
-        let audioSrc = {};
-        audioSrc.homeScreen = "music/home_screen2.mp3";
-        audioSrc.level1 = "music/level.mp3";
-        audioSrc.gameOver = "music/Game_Over.mp3";
-
-        function createAudio(src)
+        function drawPause()
         {
-            let audio = document.createElement('audio');
-            audio.id = 'audio';
-            audio.setAttribute('src', src);
-            audio.setAttribute('autoplay', 'autoplay');
-            audio.setAttribute('loop', 'loop');
-            document.body.appendChild(audio);
+            if (pause)
+            {
+                context.font = '40pt Calibri';
+                context.fillStyle = 'red';
+                context.textAlign = 'center';
+                context.fillText('PAUSE', 300, 450);
+            }
         }
 
-        function changeAudioSrc(src)
-        {
-            let audio = document.getElementById('audio');
-            audio.setAttribute('src', src);
-        }
 
-        // document.body.replaceChild(music.level, music.gameOver);
-        // let d1 = document.getElementById('audio');
-        // d1.remove();
-        // document.body.appendChild();
+        // --------------------------------------------------------------------------------
+        // полоса жизни
+        // --------------------------------------------------------------------------------
 
-
-// рисуем жизнь
 
         function drawLife()
         {
             let blueRGB = Math.floor(playership.life / 2);
+
             function redRGB()
             {
                 if (blueRGB > 200)
@@ -755,6 +832,7 @@ window.addEventListener('load', function ()
                     return 250;
 
             }
+
             context.fillStyle = 'rgba(' + redRGB() + ',50,' + blueRGB + ',0.7)';
             console.log(blueRGB);
             context.fillRect(10, 80, playership.life / 2, 30);
@@ -768,7 +846,10 @@ window.addEventListener('load', function ()
         }
 
 
-// восстановление щита
+        // --------------------------------------------------------------------------------
+        // щит
+        // --------------------------------------------------------------------------------
+
 
         function recoveryShield(hp)
         {
@@ -779,7 +860,10 @@ window.addEventListener('load', function ()
         }
 
 
-// рисуем счет
+        // --------------------------------------------------------------------------------
+        // счет
+        // --------------------------------------------------------------------------------
+
 
         let score = 0;
 
@@ -797,7 +881,10 @@ window.addEventListener('load', function ()
         }
 
 
-// задержка старта астероидов
+        // --------------------------------------------------------------------------------
+        // задержка старта астероидов
+        // --------------------------------------------------------------------------------
+
 
         let start = true;
 
@@ -811,7 +898,10 @@ window.addEventListener('load', function ()
         }
 
 
-// случайная величина
+        // --------------------------------------------------------------------------------
+        // утилиты
+        // --------------------------------------------------------------------------------
+
 
         function getRandomFloat(min, max)
         {
@@ -819,21 +909,10 @@ window.addEventListener('load', function ()
         }
 
 
-// пауза
+        // --------------------------------------------------------------------------------
+        // управление кораблем и выстрелами
+        // --------------------------------------------------------------------------------
 
-        function drawPause()
-        {
-            if (pause)
-            {
-                context.font = '40pt Calibri';
-                context.fillStyle = 'red';
-                context.textAlign = 'center';
-                context.fillText('PAUSE', 300, 450);
-            }
-        }
-
-
-// управление кнопками кораблем  и выстрелами
 
         let horisontalMovement = 0;
         let shotIntervalId = -1;
@@ -867,79 +946,85 @@ window.addEventListener('load', function ()
         }
 
 
-        window.addEventListener('keyup', (e) =>
-        {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-
-            let keyCode = e['keyCode'];
-
-            switch (keyCode)
+        window.addEventListener('keyup',
+            function (e)
             {
-                // пробел
-                case 32:
-                    stopFiring();
-                    // checkInterval = true;
-                    // clearTimeout(timerId);
-                    break;
-                // стрелка влево
-                case 37:
-                    horisontalMovement = 0;
-                    break;
-                // стрелка вправо
-                case 39:
-                    horisontalMovement = 0;
-                    break;
-            }
+                e.stopPropagation();
+                e.stopImmediatePropagation();
 
-        });
-        window.addEventListener('keydown', (e) =>
-        {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
+                let keyCode = e['keyCode'];
 
-            let keyCode = e['keyCode'];
+                switch (keyCode)
+                {
+                    // пробел
+                    case 32:
+                        stopFiring();
+                        // checkInterval = true;
+                        // clearTimeout(timerId);
+                        break;
+                    // стрелка влево
+                    case 37:
+                        horisontalMovement = 0;
+                        break;
+                    // стрелка вправо
+                    case 39:
+                        horisontalMovement = 0;
+                        break;
+                }
 
-            switch (keyCode)
+            });
+
+        window.addEventListener('keydown',
+            function (e)
             {
-                // пробел
-                case 32:
-                    startFiring();
-                    // let shot = new curShell();
-                    // if (checkInterval && !pause)
-                    // {
-                    //     addShot();
-                    //     timerId = setInterval(addShot, shot.timeoutFiringRate);
-                    //     checkInterval = false;
-                    // }
-                    // if (shot.numberShell !== lastNumberShell)
-                    // {
-                    //     checkInterval = true;
-                    //     clearTimeout(timerId);
-                    //     lastNumberShell = shot.numberShell;
-                    // }
-                    break;
-                // стрелка влево
-                case 37:
-                    horisontalMovement = -1;
-                    break;
-                // стрелка вправо
-                case 39:
-                    horisontalMovement = 1;
-                    break;
-                // пауза
-                case 80:
-                    (!pause) ? pause = true : pause = false;
-                    // if (!pause)
-                    //     pause = true;
-                    // else
-                    //     pause = false;
-                    break;
-            }
-        });
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                let keyCode = e['keyCode'];
+
+                switch (keyCode)
+                {
+                    // пробел
+                    case 32:
+                        startFiring();
+                        // let shot = new curShell();
+                        // if (checkInterval && !pause)
+                        // {
+                        //     addShot();
+                        //     timerId = setInterval(addShot, shot.timeoutFiringRate);
+                        //     checkInterval = false;
+                        // }
+                        // if (shot.numberShell !== lastNumberShell)
+                        // {
+                        //     checkInterval = true;
+                        //     clearTimeout(timerId);
+                        //     lastNumberShell = shot.numberShell;
+                        // }
+                        break;
+                    // стрелка влево
+                    case 37:
+                        horisontalMovement = -1;
+                        break;
+                    // стрелка вправо
+                    case 39:
+                        horisontalMovement = 1;
+                        break;
+                    // пауза
+                    case 80:
+                        (!pause) ? pause = true : pause = false;
+                        // if (!pause)
+                        //     pause = true;
+                        // else
+                        //     pause = false;
+                        break;
+                }
+            });
 
 
-// вызов функций
+        // --------------------------------------------------------------------------------
+        // основной цикл
+        // --------------------------------------------------------------------------------
+
 
         let maxAsteroidsInLevel = 500;
 
@@ -951,14 +1036,14 @@ window.addEventListener('load', function ()
                 moveSplinter();
                 movePlayership();
                 moveShots();
-                moveExplosion();
+                moveExplosions();
                 moveBackground();
             }
             timeoutStartAsteroid();
-            checkCollisions();
-            checkCollisionWithSplinter();
-            checkHitAsteroid();
-            checkHitSplinter();
+            checkPlayershipAndAsteroidsCollisions();
+            checkPlayershipAndSplintersCollisions();
+            checkShellsAndAsteroidsCollisions();
+            checkShellsAndSplintersCollisions();
             drawBackground();
             drawAsteroids();
             drawSplinter();
@@ -973,17 +1058,23 @@ window.addEventListener('load', function ()
                 drawLife();
                 recoveryShield(0.03);
             }
-
-
             else
+            {
                 drawGameOver();
-            drawExplosion();
+            }
+            drawExplosions();
 
             // requestAnimationFrame(tick);
         }
 
+
+        // --------------------------------------------------------------------------------
+        // инициализация
+        // --------------------------------------------------------------------------------
+
+
         addPlayership();
-        createAudio(audioSrc.level1);
+        initAudio(audioSrc.level1);
         intervalAddAsteroid(1, 10000);
         setInterval(tick, 1000 / 60);
         tick();
