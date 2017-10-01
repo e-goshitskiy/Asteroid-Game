@@ -116,9 +116,9 @@ window.addEventListener('load', function ()
             {
                 let asteroid = {};
                 asteroid.size = getRandomFloat(20, 100);
-                asteroid.speed = getRandomFloat(1, 10);
+                asteroid.dy = getRandomFloat(1, 10);
                 asteroid.x = getRandomFloat(-50, 650);
-                asteroid.offsetX = getRandomFloat(-1, 1);
+                asteroid.dx = getRandomFloat(-1, 1);
                 asteroid.y = getRandomFloat(-500, -100);
                 asteroid.life = asteroid.size;
                 asteroids.push(asteroid);
@@ -139,8 +139,8 @@ window.addEventListener('load', function ()
             for (let i = 0; i < asteroids.length; i++)
             {
                 let asteroid = asteroids[i];
-                asteroid.x += asteroid.offsetX;
-                asteroid.y += asteroid.speed;
+                asteroid.x += asteroid.dx;
+                asteroid.y += asteroid.dy;
                 if (asteroid.y >= 1000 || asteroid.x < -60 || asteroid.x > 660)
                 {
                     killAsteroid(i);
@@ -191,10 +191,10 @@ window.addEventListener('load', function ()
             {
                 let splinter = {};
                 splinter.size = size / 5;
-                splinter.speed = speed;
+                splinter.dy = dy;
                 splinter.x = x;
                 splinter.y = y;
-                splinter.offsetX = offsetX;
+                splinter.dx = dx;
                 splinter.accelerateX = Math.round(getRandomFloat(-4, 4));
                 splinter.accelerateY = Math.round(getRandomFloat(-4, 4));
                 splinter.life = 20;
@@ -218,8 +218,8 @@ window.addEventListener('load', function ()
             for (let i = 0; i < splinters.length; i++)
             {
                 let splinter = splinters[i];
-                splinter.x += splinter.offsetX + splinter.accelerateX;
-                splinter.y += splinter.speed + splinter.accelerateY;
+                splinter.x += splinter.dx + splinter.accelerateX;
+                splinter.y += splinter.dy + splinter.accelerateY;
                 if (splinter.y >= 1000 || splinter.x < -60 || splinter.x > 660)
                     killSplinter(i);
             }
@@ -306,7 +306,7 @@ window.addEventListener('load', function ()
         {
         }
 
-        AbstractShell.prototype.speed = 15;
+        AbstractShell.prototype.dy = 15;
         AbstractShell.prototype.timeoutFiringRate = 100;
         AbstractShell.prototype.power = 10;
         AbstractShell.prototype.image = images.shell1;
@@ -321,7 +321,7 @@ window.addEventListener('load', function ()
         // метод move
         AbstractShell.prototype.move = function ()
         {
-            this.y -= this.speed;
+            this.y -= this.dy;
         };
 
 
@@ -339,7 +339,7 @@ window.addEventListener('load', function ()
         }
 
         PowerLaser.prototype = new AbstractShell;
-        PowerLaser.prototype.speed = 10;
+        PowerLaser.prototype.dy = 10;
         PowerLaser.prototype.timeoutFiringRate = 175;
         PowerLaser.prototype.power = 23;
         PowerLaser.prototype.image = images.shell2;
@@ -352,7 +352,7 @@ window.addEventListener('load', function ()
         }
 
         GreenLaser.prototype = new AbstractShell;
-        GreenLaser.prototype.speed = 15;
+        GreenLaser.prototype.dy = 15;
         GreenLaser.prototype.timeoutFiringRate = 150;
         GreenLaser.prototype.power = 25;
         GreenLaser.prototype.image = images.shell3;
@@ -365,7 +365,7 @@ window.addEventListener('load', function ()
         }
 
         BlueLaser.prototype = new AbstractShell;
-        BlueLaser.prototype.speed = 12;
+        BlueLaser.prototype.dy = 12;
         BlueLaser.prototype.timeoutFiringRate = 175;
         BlueLaser.prototype.power = 35;
         BlueLaser.prototype.image = images.shell4;
@@ -378,7 +378,7 @@ window.addEventListener('load', function ()
         }
 
         MiniPhotonGun.prototype = new AbstractShell;
-        MiniPhotonGun.prototype.speed = 30;
+        MiniPhotonGun.prototype.dy = 30;
         MiniPhotonGun.prototype.timeoutFiringRate = 400;
         MiniPhotonGun.prototype.power = 100;
         MiniPhotonGun.prototype.image = images.shell5;
@@ -405,7 +405,7 @@ window.addEventListener('load', function ()
         }
 
         Rocket.prototype = new AbstractShell;
-        Rocket.prototype.speed = 5;
+        Rocket.prototype.dy = 5;
         Rocket.prototype.timeoutFiringRate = 300;
         Rocket.prototype.power = 300;
         Rocket.prototype.image = images.rocket;
@@ -493,23 +493,29 @@ window.addEventListener('load', function ()
 
 
         let explosions = [];
-        let previousTickTime = 0;
-        let timeRatio = 10;  // время жизни взрыва (коэф.)
+
+        const EXPLOSION_LIFETIME = 250;
+        const EXPLOSION_FRAMES_AMOUNT = 9;
 
 
-        function addExplosion(size, speed, x, offsetX, y, timeRatio)
+        function addExplosion(size, x, y, dx, dy)
         {
+            // DEBUG
+            // if (explosions.length > 0)
+            //     return;
+
             if (!isGameOver)
             {
                 let explosion = {};
-                explosion.size = size;
-                explosion.speed = speed;
+
+                explosion.size = size / 32;
                 explosion.x = x;
-                explosion.offsetX = offsetX;
                 explosion.y = y;
-                explosion.lifeTime = Math.round(size * timeRatio);
-                explosion.imageLifeTime = Math.round(size * timeRatio / 9);
-                explosion.startTime = (new Date).getTime();
+                explosion.dx = dx;
+                explosion.dy = dy;
+                explosion.animationTime = 0;
+                explosion.lifeTime = EXPLOSION_LIFETIME;
+
                 explosions.push(explosion);
             }
         }
@@ -521,39 +527,33 @@ window.addEventListener('load', function ()
             {
                 let explosion = explosions[i];
 
-                let currentTime = (new Date).getTime();
+                let image = images['explosion' + (getFrameNumberByAnimationTime(explosion.animationTime, explosion.lifeTime, EXPLOSION_FRAMES_AMOUNT) + 1)];
 
-                // остановка взрыва при паузе
-                if (pause)
-                    explosion.startTime = explosion.startTime + currentTime - previousTickTime;
-                previousTickTime = currentTime;
-
-
-                for (let k = 1; k <= 9; k++)
-                {
-                    if (currentTime <= explosion.startTime + explosion.imageLifeTime * k)
-                    {
-                        context.drawImage(images['explosion' + k], explosion.x - explosion.size / 2, explosion.y - explosion.size / 2, explosion.size, explosion.size);
-                        break;
-                    }
-                }
-                if (currentTime > explosion.startTime + explosion.lifeTime)
-                {
-                    explosions.splice(i, 1);
-                    i--;
-                }
+                context.drawImage(image,
+                    explosion.x - (image.width * explosion.size) / 2,
+                    explosion.y - (image.height * explosion.size) / 2,
+                    (image.width * explosion.size),
+                    (image.height * explosion.size));
             }
-
         }
 
 
-        function moveExplosions()
+        function moveExplosions(time)
         {
             for (let i = 0; i < explosions.length; i++)
             {
                 let explosion = explosions[i];
-                explosion.x += explosion.offsetX / 2;
-                explosion.y += explosion.speed / 2;
+
+                explosion.x += explosion.dx / 2;
+                explosion.y += explosion.dy / 2;
+
+                explosion.animationTime += time;
+
+                if (explosion.animationTime >= explosion.lifeTime)
+                {
+                    explosions.splice(i, 1);
+                    i--;
+                }
             }
         }
 
@@ -576,7 +576,7 @@ window.addEventListener('load', function ()
                 {
                     hitPlayership(asteroid.life);
                     killAsteroid(i);
-                    addExplosion(asteroid.size, asteroid.speed, asteroid.x, asteroid.offsetX, asteroid.y, timeRatio);
+                    addExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
                     break;
                 }
 
@@ -590,7 +590,7 @@ window.addEventListener('load', function ()
             if (playership.life <= 0)
             {
                 playership.life = 0;
-                addExplosion(playership.size * 2, undefined, playership.x, undefined, playership.y, 20);
+                addExplosion(playership.size * 2, playership.x, playership.y, 0, 0);
                 gameOver();
             }
         }
@@ -618,13 +618,16 @@ window.addEventListener('load', function ()
                     if (distanse <= colissionDistanse)
                     {
                         hitAsteroid(shot.power, i);
+
                         deleteShellAtHit(k);
+
                         if (curShell === Rocket)
-                            addExplosion(300, undefined, shot.x, undefined, shot.y, 90000);
+                            addExplosion(getRandomFloat(100, 300), shot.x, shot.y, 0, 0);
+
                         if (curShell === MiniPhotonGun)
-                            addExplosion(600, undefined, shot.x, undefined, shot.y, 90000);
+                            addExplosion(getRandomFloat(300, 600), shot.x, shot.y, 0, 0);
                         else
-                            addExplosion(40, undefined, shot.x, undefined, shot.y, 10);
+                            addExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0);
                     }
                 }
             }
@@ -639,8 +642,8 @@ window.addEventListener('load', function ()
             {
                 addScore(asteroid.size / 4);
                 killAsteroid(indexAsteroid);
-                addExplosion(asteroid.size, asteroid.speed, asteroid.x, asteroid.offsetX, asteroid.y, timeRatio);
-                addSplinter((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.speed, asteroid.x, asteroid.y, asteroid.offsetX);
+                addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
+                addSplinter((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.dy, asteroid.x, asteroid.y, asteroid.dx);
             }
         }
 
@@ -669,7 +672,7 @@ window.addEventListener('load', function ()
                 {
                     hitPlayership(splinter.life);
                     killSplinter(i);
-                    addExplosion(splinter.size * 2, splinter.speed + splinter.accelerateY, splinter.x, splinter.offsetX + splinter.accelerateX, splinter.y, timeRatio / 4);
+                    addExplosion(splinter.size * 2, splinter.x, splinter.y, splinter.dx + splinter.accelerateX, splinter.dy + splinter.accelerateY);
                     break;
                 }
 
@@ -700,7 +703,7 @@ window.addEventListener('load', function ()
                     {
                         hitSplinter(shot.power, i);
                         deleteShellAtHit(k);
-                        addExplosion(40, undefined, shot.x, undefined, shot.y, 10);
+                        addExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0);
                     }
                 }
             }
@@ -714,7 +717,7 @@ window.addEventListener('load', function ()
             {
                 addScore(5);
                 killSplinter(indexSplinter);
-                addExplosion(splinter.size * 2, splinter.speed + splinter.accelerateY, splinter.x, splinter.offsetX + splinter.accelerateX, splinter.y, timeRatio / 4);
+                addExplosion(splinter.size * 2, splinter.x, splinter.y, splinter.dx + splinter.accelerateX, splinter.dy + splinter.accelerateY);
             }
             else
                 addScore(hp / hp);
@@ -834,7 +837,6 @@ window.addEventListener('load', function ()
             }
 
             context.fillStyle = 'rgba(' + redRGB() + ',50,' + blueRGB + ',0.7)';
-            console.log(blueRGB);
             context.fillRect(10, 80, playership.life / 2, 30);
             context.fillStyle = 'black';
             context.lineWidth = 4;
@@ -906,6 +908,23 @@ window.addEventListener('load', function ()
         function getRandomFloat(min, max)
         {
             return Math.random() * (max - min) + min;
+        }
+
+
+        function getFrameNumberByAnimationTime(animationTime, totalTime, framesAmount)
+        {
+            if (animationTime < 0)
+                animationTime = 0;
+            else if (animationTime > totalTime)
+                animationTime = totalTime;
+
+            let normalizedTime = animationTime / totalTime; // animationTime in 0..1
+
+            let currentFrame = Math.floor(normalizedTime * (framesAmount + 1));
+            if (currentFrame > (framesAmount - 1))
+                currentFrame = (framesAmount - 1);
+
+            return currentFrame;
         }
 
 
@@ -1026,43 +1045,58 @@ window.addEventListener('load', function ()
         // --------------------------------------------------------------------------------
 
 
+        let lastTime = -1;
+
         let maxAsteroidsInLevel = 500;
 
         function tick()
         {
+            let currentTime = (new Date).getTime();
+            if (lastTime === -1)
+                lastTime = currentTime;
+
+            let tickTime = currentTime - lastTime;
+            lastTime = currentTime;
+
             if (!pause)
             {
-                moveAsteroids();
-                moveSplinter();
-                movePlayership();
-                moveShots();
-                moveExplosions();
-                moveBackground();
+                moveAsteroids(tickTime);
+                moveSplinter(tickTime);
+                movePlayership(tickTime);
+                moveShots(tickTime);
+                moveExplosions(tickTime);
+                moveBackground(tickTime);
             }
+
             timeoutStartAsteroid();
+
             checkPlayershipAndAsteroidsCollisions();
             checkPlayershipAndSplintersCollisions();
             checkShellsAndAsteroidsCollisions();
             checkShellsAndSplintersCollisions();
+
             drawBackground();
             drawAsteroids();
             drawSplinter();
+            drawExplosions();
+
             drawScore();
             drawLevel1();
             drawEndLevel();
             drawPause();
+
             if (!isGameOver)
             {
                 drawShots();
                 drawPlayership();
                 drawLife();
+
                 recoveryShield(0.03);
             }
             else
             {
                 drawGameOver();
             }
-            drawExplosions();
 
             // requestAnimationFrame(tick);
         }
