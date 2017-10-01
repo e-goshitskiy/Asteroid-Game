@@ -1,5 +1,6 @@
 "use strict";
-window.addEventListener('load', function ()
+window.addEventListener('load',
+    function ()
     {
         let canvas = document.getElementById('game');
         let context = canvas.getContext('2d');
@@ -134,7 +135,7 @@ window.addEventListener('load', function ()
             }
         }
 
-        function moveAsteroids()
+        function moveAsteroids(time)
         {
             for (let i = 0; i < asteroids.length; i++)
             {
@@ -144,6 +145,7 @@ window.addEventListener('load', function ()
                 if (asteroid.y >= 1000 || asteroid.x < -60 || asteroid.x > 660)
                 {
                     killAsteroid(i);
+                    asteroids.splice(i, 1);
                     i--;
                 }
             }
@@ -159,7 +161,6 @@ window.addEventListener('load', function ()
 
         function killAsteroid(index)
         {
-            asteroids.splice(index, 1);
             addAsteroidAfterKill(1);
         }
 
@@ -221,7 +222,7 @@ window.addEventListener('load', function ()
                 splinter.x += splinter.dx + splinter.accelerateX;
                 splinter.y += splinter.dy + splinter.accelerateY;
                 if (splinter.y >= 1000 || splinter.x < -60 || splinter.x > 660)
-                    killSplinter(i);
+                    i = killSplinter(i);
             }
         }
 
@@ -229,6 +230,7 @@ window.addEventListener('load', function ()
         {
             splinters.splice(index, 1);
             index--;
+            return index;
         }
 
 
@@ -576,6 +578,7 @@ window.addEventListener('load', function ()
                 {
                     hitPlayership(asteroid.life);
                     killAsteroid(i);
+                    asteroids.splice(i, 1);
                     addExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
                     break;
                 }
@@ -642,6 +645,7 @@ window.addEventListener('load', function ()
             {
                 addScore(asteroid.size / 4);
                 killAsteroid(indexAsteroid);
+                asteroids.splice(indexAsteroid, 1);
                 addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
                 addSplinter((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
             }
