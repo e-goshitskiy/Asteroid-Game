@@ -11,6 +11,8 @@ window.addEventListener('load',
         // --------------------------------------------------------------------------------
 
 
+        // тест
+
         let images = {};
 
         function initImages()
