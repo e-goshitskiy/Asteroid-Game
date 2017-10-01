@@ -185,16 +185,16 @@ window.addEventListener('load', function ()
 
         let splinters = [];
 
-        function addSplinter(amount, size, speed, x, y, offsetX)
+        function addSplinter(amount, size, x, y, dx, dy)
         {
             for (let i = 0; i < amount; i++)
             {
                 let splinter = {};
                 splinter.size = size / 5;
-                splinter.dy = dy;
                 splinter.x = x;
                 splinter.y = y;
                 splinter.dx = dx;
+                splinter.dy = dy;
                 splinter.accelerateX = Math.round(getRandomFloat(-4, 4));
                 splinter.accelerateY = Math.round(getRandomFloat(-4, 4));
                 splinter.life = 20;
@@ -643,7 +643,7 @@ window.addEventListener('load', function ()
                 addScore(asteroid.size / 4);
                 killAsteroid(indexAsteroid);
                 addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
-                addSplinter((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.dy, asteroid.x, asteroid.y, asteroid.dx);
+                addSplinter((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
             }
         }
 
