@@ -78,7 +78,7 @@ window.addEventListener('load', function ()
         }
 
         Level1Audio.prototype = new BackgroundAudio();
-        HomeScreenAudio.prototype.src = "music/music/level.mp3";
+        Level1Audio.prototype.src = "music/level.mp3";
 
 
         // game over
@@ -103,6 +103,7 @@ window.addEventListener('load', function ()
             audio.setAttribute('autoplay', curAudio.autoplay);
             audio.setAttribute('loop', curAudio.loop);
             document.body.appendChild(audio);
+            console.log(curAudio);
         }
 
         function changeAudioSrc(typeAudio)
@@ -110,6 +111,8 @@ window.addEventListener('load', function ()
             let curAudio = new typeAudio();
             let audio = document.getElementById(curAudio.id);
             audio.setAttribute('src', curAudio.src);
+            console.log(curAudio);
+            console.log(audio);
         }
 
 
@@ -223,6 +226,7 @@ window.addEventListener('load', function ()
         AbstractFlyingObject.prototype.dx = 0;
         AbstractFlyingObject.prototype.dy = 0;
         AbstractFlyingObject.prototype.life = 0;
+        AbstractFlyingObject.prototype.addScore = 0;
         AbstractFlyingObject.prototype.image = '';
 
         AbstractFlyingObject.prototype.draw = function ()
@@ -246,6 +250,7 @@ window.addEventListener('load', function ()
             this.dx = getRandomFloat(-1, 1);
             this.dy = getRandomFloat(1, 8);
             this.life = this.size;
+            this.addScore = this.size / 4;
             this.image = images['asteroid' + Math.round(getRandomFloat(1, 13))];
         }
 
@@ -263,6 +268,8 @@ window.addEventListener('load', function ()
             this.dy = dy + this.accelerateY;
             this.accelerateX = Math.round(getRandomFloat(-4, 4));
             this.accelerateY = Math.round(getRandomFloat(-4, 4));
+            this.life = this.size;
+            this.addScore = this.size / 2;
             this.image = images['splinter' + Math.round(getRandomFloat(1, 13))];
 
         }
@@ -520,13 +527,14 @@ window.addEventListener('load', function ()
         AbstractShell.prototype.x = 300;
         AbstractShell.prototype.y = 650;
         AbstractShell.prototype.dy = 15;
+        AbstractShell.prototype.offsetY = 0;
         AbstractShell.prototype.timeoutFiringRate = 100;
         AbstractShell.prototype.power = 10;
         AbstractShell.prototype.image = images.shell1;
 
         AbstractShell.prototype.draw = function ()
         {
-            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y/* - this.image.height / 2*/);
         };
         AbstractShell.prototype.move = function ()
         {
@@ -543,6 +551,7 @@ window.addEventListener('load', function ()
 
         PulseLaser.prototype = new AbstractShell;
 
+
         // мощный лазер (оружие 2)
         function PowerLaser()
         {
@@ -552,6 +561,7 @@ window.addEventListener('load', function ()
 
         PowerLaser.prototype = new AbstractShell;
         PowerLaser.prototype.dy = 10;
+        PowerLaser.prototype.offsetY = 10;
         PowerLaser.prototype.timeoutFiringRate = 175;
         PowerLaser.prototype.power = 23;
         PowerLaser.prototype.image = images.shell2;
@@ -565,6 +575,7 @@ window.addEventListener('load', function ()
 
         GreenLaser.prototype = new AbstractShell;
         GreenLaser.prototype.dy = 15;
+        GreenLaser.prototype.offsetY = 10;
         GreenLaser.prototype.timeoutFiringRate = 150;
         GreenLaser.prototype.power = 25;
         GreenLaser.prototype.image = images.shell3;
@@ -578,6 +589,7 @@ window.addEventListener('load', function ()
 
         BlueLaser.prototype = new AbstractShell;
         BlueLaser.prototype.dy = 12;
+        BlueLaser.prototype.offsetY = 10;
         BlueLaser.prototype.timeoutFiringRate = 175;
         BlueLaser.prototype.power = 35;
         BlueLaser.prototype.image = images.shell4;
@@ -591,6 +603,7 @@ window.addEventListener('load', function ()
 
         MiniPhotonGun.prototype = new AbstractShell;
         MiniPhotonGun.prototype.dy = 35;
+        MiniPhotonGun.prototype.offsetY = 45;
         MiniPhotonGun.prototype.timeoutFiringRate = 300;
         MiniPhotonGun.prototype.power = 120;
         MiniPhotonGun.prototype.image = images.shell5;
@@ -605,6 +618,7 @@ window.addEventListener('load', function ()
 
         Rocket.prototype = new AbstractShell;
         Rocket.prototype.dy = 5;
+        Rocket.prototype.offsetY = 25;
         Rocket.prototype.timeoutFiringRate = 300;
         Rocket.prototype.power = 300;
         Rocket.prototype.image = images.rocket1;
@@ -634,28 +648,28 @@ window.addEventListener('load', function ()
 
         function checkCurShell()
         {
-            // if (score >= 40 && score < 100)
-            //     changeCurShellTo(PowerLaser);
-            // else if (score >= 100 && score < 300)
-            //     changeCurShellTo(GreenLaser);
-            // else if (score >= 300 && score < 400)
-            //     changeCurShellTo(BlueLaser);
-            // else if (score >= 400 && score < 800)
-            //     changeCurShellTo(MiniPhotonGun);
-            // else if (score >= 800)
-            //     changeCurShellTo(Rocket);
-            if (score < 400)
-                curShell = Rocket;
-            else if (score >= 400 && score < 1000)
+            if (score >= 40 && score < 100)
                 changeCurShellTo(PowerLaser);
-            else if (score >= 1000 && score < 1500)
+            else if (score >= 100 && score < 300)
                 changeCurShellTo(GreenLaser);
-            else if (score >= 1500 && score < 2000)
+            else if (score >= 300 && score < 400)
                 changeCurShellTo(BlueLaser);
-            else if (score >= 2000 && score < 3000)
+            else if (score >= 400 && score < 800)
                 changeCurShellTo(MiniPhotonGun);
-            else if (score >= 3000)
+            else if (score >= 800)
                 changeCurShellTo(Rocket);
+            // if (score < 400)
+            //     curShell = PulseLaser;
+            // else if (score >= 400 && score < 1000)
+            //     changeCurShellTo(PowerLaser);
+            // else if (score >= 1000 && score < 1500)
+            //     changeCurShellTo(GreenLaser);
+            // else if (score >= 1500 && score < 2000)
+            //     changeCurShellTo(BlueLaser);
+            // else if (score >= 2000 && score < 3000)
+            //     changeCurShellTo(MiniPhotonGun);
+            // else if (score >= 3000)
+            //     changeCurShellTo(Rocket);
         }
 
         function changeCurShellTo(newShell)
@@ -674,7 +688,7 @@ window.addEventListener('load', function ()
             let shot = new curShell;
             let ship = ships[0];
             shot.x = ship.x;
-            shot.y = ship.y - 10;
+            shot.y = ship.y - shot.offsetY;
             shots.push(shot);
         }
 
@@ -1003,7 +1017,7 @@ window.addEventListener('load', function ()
                     if (distanse <= colissionDistanse)
                     {
                         ship.life -= asteroid.life;
-                        addExplosion(AsteroidExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
+                        // addExplosion(AsteroidExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
 
                         if (asteroid.type === 'asteroid')
                             addAsteroidAfterKill(1, Asteroid1);
@@ -1014,7 +1028,7 @@ window.addEventListener('load', function ()
                         if (ship.life <= 0)
                         {
                             ship.life = 0;
-                            addExplosion(PlayershipExplosion(ship.size * 2, ship.x, ship.y, 0, 0, 500));
+                            // addExplosion(PlayershipExplosion(ship.size * 2, ship.x, ship.y, 0, 0, 500));
                             gameState = 'gameOver';
                         }
                     }
@@ -1031,11 +1045,12 @@ window.addEventListener('load', function ()
 
                     let distanseRatio;
                     if (asteroid.type === 'asteroid')
-                        distanseRatio = 0.13;
+                        distanseRatio = 0.8;
                     if (asteroid.type === 'splinter')
-                        distanseRatio = 0.08;
+                        distanseRatio = 0.8;
 
-                    let colissionDistanse = (asteroid.size / 2 + shot.image.height / 2) * distanseRatio;
+                    let colissionDistanse = (asteroid.size / 2) * distanseRatio;
+                    console.log(distanse, colissionDistanse);
 
                     if (distanse <= colissionDistanse)
                     {
@@ -1045,31 +1060,31 @@ window.addEventListener('load', function ()
                         {
                             if (asteroid.type === 'asteroid')
                             {
-                                addScore(asteroid.life / 4);
-                                addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
-                                addAsteroidAfterKill((Math.floor(asteroid.size / 30)) * 2, Splinter);
+                                addAsteroidAfterKill(1, Asteroid1);
+                                // addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
+                                // addAsteroidAfterKill(3/*(Math.floor(asteroid.size / 30)) * 2*/, Splinter);
                             }
                             if (asteroid.type === 'splinter')
                             {
-                                addScore(asteroid.life);
-                                addExplosion(SplinterExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 500));
+                                addScore(asteroid.addScore);
+                                // addExplosion(SplinterExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 500));
                             }
 
+                            addScore(asteroid.addScore);
                             asteroids.splice(i, 1);
                             i--;
-                            addAsteroidAfterKill(1, Asteroid1);
                         }
                         else
                         {
                             addScore(1);
 
-                            if (curShell === Rocket)
-                                addExplosion(ShellExplosion(getRandomFloat(100, 300), shot.x, shot.y, 0, 0, 500));
-
-                            if (curShell === MiniPhotonGun)
-                                addExplosion(ShellExplosion(getRandomFloat(300, 600), shot.x, shot.y, 0, 0, 500));
-                            else
-                                addExplosion(ShellExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0, 500));
+                            // if (curShell === Rocket)
+                            //     addExplosion(ShellExplosion(getRandomFloat(100, 300), shot.x, shot.y, 0, 0, 500));
+                            //
+                            // if (curShell === MiniPhotonGun)
+                            //     addExplosion(ShellExplosion(getRandomFloat(300, 600), shot.x, shot.y, 0, 0, 500));
+                            // else
+                            //     addExplosion(ShellExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0, 500));
                         }
 
                         shots.splice(j, 1);
@@ -1087,7 +1102,7 @@ window.addEventListener('load', function ()
         let gameState = 'premission';  // premission, game, postmission, gameOver
         let pause = false;
         let premissionTimeOut = true;
-        let gameOverTimeOut = true;
+        let gameOverTime = true;
 
         function premissionTimeout()
         {
@@ -1104,11 +1119,12 @@ window.addEventListener('load', function ()
 
         function gameOverTimeout()
         {
-            if (gameState === 'gameOver' && gameOverTimeOut)
+            if (gameState === 'gameOver' && gameOverTime)
             {
                 setTimeout(function ()
                 {
-                    gameOverTimeOut = false;
+                    changeAudioSrc(GameOverAudio);
+                    gameOverTime = false;
                 }, 500);
             }
         }
@@ -1141,10 +1157,8 @@ window.addEventListener('load', function ()
 
         function drawGameOver()
         {
-            if (gameOverTimeout === false)
+            if (gameOverTime === false)
             {
-                changeAudioSrc(GameOverAudio);
-
                 context.font = '40pt Calibri';
                 context.fillStyle = 'red';
                 context.textAlign = 'center';
