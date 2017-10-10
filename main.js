@@ -231,7 +231,7 @@ window.addEventListener('load', function ()
 
         AbstractFlyingObject.prototype.draw = function ()
         {
-            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2, this.size, this.size);
+            context.drawImage(this.image, this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
         };
 
         AbstractFlyingObject.prototype.move = function ()
@@ -246,7 +246,7 @@ window.addEventListener('load', function ()
         {
             this.size = getRandomFloat(30, 120);
             this.x = getRandomFloat(-50, 650);
-            this.y = getRandomFloat(-300, -50);
+            this.y = getRandomFloat(-500, -50);
             this.dx = getRandomFloat(-1, 1);
             this.dy = getRandomFloat(1, 8);
             this.life = this.size;
@@ -527,7 +527,7 @@ window.addEventListener('load', function ()
         AbstractShell.prototype.x = 300;
         AbstractShell.prototype.y = 650;
         AbstractShell.prototype.dy = 15;
-        AbstractShell.prototype.offsetY = 0;
+        AbstractShell.prototype.offsetStartY = 0;
         AbstractShell.prototype.timeoutFiringRate = 100;
         AbstractShell.prototype.power = 10;
         AbstractShell.prototype.image = images.shell1;
@@ -560,8 +560,8 @@ window.addEventListener('load', function ()
         }
 
         PowerLaser.prototype = new AbstractShell;
-        PowerLaser.prototype.dy = 10;
-        PowerLaser.prototype.offsetY = 10;
+        PowerLaser.prototype.dy = 8;
+        PowerLaser.prototype.offsetStartY = 10;
         PowerLaser.prototype.timeoutFiringRate = 175;
         PowerLaser.prototype.power = 23;
         PowerLaser.prototype.image = images.shell2;
@@ -575,7 +575,7 @@ window.addEventListener('load', function ()
 
         GreenLaser.prototype = new AbstractShell;
         GreenLaser.prototype.dy = 15;
-        GreenLaser.prototype.offsetY = 10;
+        GreenLaser.prototype.offsetStartY = 10;
         GreenLaser.prototype.timeoutFiringRate = 150;
         GreenLaser.prototype.power = 25;
         GreenLaser.prototype.image = images.shell3;
@@ -589,7 +589,7 @@ window.addEventListener('load', function ()
 
         BlueLaser.prototype = new AbstractShell;
         BlueLaser.prototype.dy = 12;
-        BlueLaser.prototype.offsetY = 10;
+        BlueLaser.prototype.offsetStartY = 10;
         BlueLaser.prototype.timeoutFiringRate = 175;
         BlueLaser.prototype.power = 35;
         BlueLaser.prototype.image = images.shell4;
@@ -602,10 +602,10 @@ window.addEventListener('load', function ()
         }
 
         MiniPhotonGun.prototype = new AbstractShell;
-        MiniPhotonGun.prototype.dy = 35;
-        MiniPhotonGun.prototype.offsetY = 45;
-        MiniPhotonGun.prototype.timeoutFiringRate = 300;
-        MiniPhotonGun.prototype.power = 120;
+        MiniPhotonGun.prototype.dy = 25;
+        MiniPhotonGun.prototype.offsetStartY = 50;
+        MiniPhotonGun.prototype.timeoutFiringRate = 400;
+        MiniPhotonGun.prototype.power = 100;
         MiniPhotonGun.prototype.image = images.shell5;
 
 
@@ -618,9 +618,9 @@ window.addEventListener('load', function ()
 
         Rocket.prototype = new AbstractShell;
         Rocket.prototype.dy = 5;
-        Rocket.prototype.offsetY = 25;
-        Rocket.prototype.timeoutFiringRate = 300;
-        Rocket.prototype.power = 300;
+        Rocket.prototype.offsetStartY = 25;
+        Rocket.prototype.timeoutFiringRate = 500;
+        Rocket.prototype.power = 150;
         Rocket.prototype.image = images.rocket1;
 
         // мега фотонная пушка (оружие7)
@@ -688,7 +688,7 @@ window.addEventListener('load', function ()
             let shot = new curShell;
             let ship = ships[0];
             shot.x = ship.x;
-            shot.y = ship.y - shot.offsetY;
+            shot.y = ship.y - shot.offsetStartY;
             shots.push(shot);
         }
 
@@ -1008,7 +1008,7 @@ window.addEventListener('load', function ()
 
                     let distanseRatio;
                     if (asteroid.type === 'asteroid')
-                        distanseRatio = 0.7;
+                        distanseRatio = 0.9;
                     if (asteroid.type === 'splinter')
                         distanseRatio = 1;
 
@@ -1050,8 +1050,6 @@ window.addEventListener('load', function ()
                         distanseRatio = 0.8;
 
                     let colissionDistanse = (asteroid.size / 2) * distanseRatio;
-                    console.log(distanse, colissionDistanse);
-
                     if (distanse <= colissionDistanse)
                     {
                         asteroid.life -= shot.power;
