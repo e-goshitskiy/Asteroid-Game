@@ -1,6 +1,6 @@
 "use strict";
-window.addEventListener('load',
-    function ()
+
+window.addEventListener('load', function ()
     {
         let canvas = document.getElementById('game');
         let context = canvas.getContext('2d');
@@ -11,22 +11,24 @@ window.addEventListener('load',
         // --------------------------------------------------------------------------------
 
 
-        // тест 2
-
         let images = {};
 
         function initImages()
         {
-            images.background = loadImage('assets/backgrounds/1.png');
-            images.playership = loadImage('assets/playerships/1.png');
-            images.asteroid = loadImage('assets/asteroids/1.png');
-            images.rocket = loadImage('assets/rocket/1.png');
+            for (let i = 1; i <= 1; i++)
+                images['background' + i] = loadImage('assets/backgrounds/' + i + '.png');
+            for (let i = 1; i <= 1; i++)
+                images['rocket' + i] = loadImage('assets/rocket/' + i + '.png');
             for (let i = 1; i <= 13; i++)
                 images['splinter' + i] = loadImage('assets/splinters/' + i + '.png');
             for (let i = 1; i <= 6; i++)
                 images['shell' + i] = loadImage('assets/shells/' + i + '.png');
             for (let i = 1; i <= 9; i++)
                 images['explosion' + i] = loadImage('assets/explosion/' + i + '.png');
+            for (let i = 1; i <= 13; i++)
+                images['asteroid' + i] = loadImage('assets/asteroids/' + i + '.png');
+            for (let i = 1; i <= 1; i++)
+                images['ship' + i] = loadImage('assets/playerships/' + i + '.png');
         }
 
         function loadImage(url)
@@ -40,68 +42,235 @@ window.addEventListener('load',
         initImages();
 
 
+// --------------------------------------------------------------------------------
+// набор звук
+// --------------------------------------------------------------------------------
+
+        function AbstractAudio()
+        {
+        }
+
+        AbstractAudio.prototype.id = '';
+        AbstractAudio.prototype.src = '';
+        AbstractAudio.prototype.autoplay = 'autoplay';
+        AbstractAudio.prototype.loop = '';
+
+        function BackgroundAudio()
+        {
+        }
+
+        BackgroundAudio.prototype = new AbstractAudio();
+        BackgroundAudio.prototype.id = 'backgroundMusic';
+        BackgroundAudio.prototype.loop = 'loop';
+
+
+        // главный экран
+        function HomeScreenAudio()
+        {
+        }
+
+        HomeScreenAudio.prototype = new BackgroundAudio();
+        HomeScreenAudio.prototype.src = "music/home_screen2.mp3";
+
+        // игра вариант 1
+        function Level1Audio()
+        {
+        }
+
+        Level1Audio.prototype = new BackgroundAudio();
+        HomeScreenAudio.prototype.src = "music/music/level.mp3";
+
+
+        // game over
+        function GameOverAudio()
+        {
+        }
+
+        GameOverAudio.prototype = new BackgroundAudio();
+        GameOverAudio.prototype.src = "music/Game_Over.mp3";
+
+
         // --------------------------------------------------------------------------------
         // звук
         // --------------------------------------------------------------------------------
 
-
-        let audioSrc = {};
-        audioSrc.homeScreen = "music/home_screen2.mp3";
-        audioSrc.level1 = "music/level.mp3";
-        audioSrc.gameOver = "music/Game_Over.mp3";
-
-        function initAudio(src)
+        function addAudio(typeAudio)
         {
+            let curAudio = new typeAudio();
             let audio = document.createElement('audio');
-            audio.id = 'audio';
-            audio.setAttribute('src', src);
-            audio.setAttribute('autoplay', 'autoplay');
-            audio.setAttribute('loop', 'loop');
+            audio.setAttribute('id', curAudio.id);
+            audio.setAttribute('src', curAudio.src);
+            audio.setAttribute('autoplay', curAudio.autoplay);
+            audio.setAttribute('loop', curAudio.loop);
             document.body.appendChild(audio);
         }
 
-        function playAudio(src)
+        function changeAudioSrc(typeAudio)
         {
-            let audio = document.getElementById('audio');
-            audio.setAttribute('src', src);
+            let curAudio = new typeAudio();
+            let audio = document.getElementById(curAudio.id);
+            audio.setAttribute('src', curAudio.src);
         }
 
-        // document.body.replaceChild(music.level, music.gameOver);
-        // let d1 = document.getElementById('audio');
-        // d1.remove();
-        // document.body.appendChild();
+
+// --------------------------------------------------------------------------------
+// набор бэкграундов
+// --------------------------------------------------------------------------------
+
+        // конструктор бэкграундов
+        function AbstractBackground()
+        {
+        }
+
+        AbstractBackground.prototype.x = 0;
+        AbstractBackground.prototype.y1 = -605;
+        AbstractBackground.prototype.y2 = 0;
+        AbstractBackground.prototype.y3 = 605;
+        AbstractBackground.prototype.image = images.background1;
+
+        AbstractBackground.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x, this.y1);
+            context.drawImage(this.image, this.x, this.y2);
+            context.drawImage(this.image, this.x, this.y3);
+        };
+
+        AbstractBackground.prototype.move = function ()
+        {
+            this.y1 += 0.5;
+            this.y2 += 0.5;
+            this.y3 += 0.5;
+            if (this.y1 >= 900)
+                this.y1 -= 605 * 3;
+            if (this.y2 >= 900)
+                this.y2 -= 605 * 3;
+            if (this.y3 >= 900)
+                this.y3 -= 605 * 3;
+        };
 
 
-        // --------------------------------------------------------------------------------
-        // бэкграунд
-        // --------------------------------------------------------------------------------
+        // бэкграунд1
+        function Background1()
+        {
+        }
+
+        Background1.prototype = new AbstractBackground();
 
 
-        let y1 = -605;
+        //--------------------------------------------------------------------------------
+        //бэкграунд
+        //--------------------------------------------------------------------------------
 
-        let y2 = 0;
+        let backgrounds = [];
 
-        let y3 = 605;
+        function addBackground(typeBackground)
+        {
+            let background = new typeBackground();
+            backgrounds.push(background);
+        }
 
         function drawBackground()
         {
-            context.drawImage(images.background, 0, y1);
-            context.drawImage(images.background, 0, y2);
-            context.drawImage(images.background, 0, y3);
+                let curBackground = backgrounds[0];
+                curBackground.draw();
         }
 
         function moveBackground()
         {
-            y1 += 0.5;
-            y2 += 0.5;
-            y3 += 0.5;
-            if (y1 >= 900)
-                y1 -= 605 * 3;
-            if (y2 >= 900)
-                y2 -= 605 * 3;
-            if (y3 >= 900)
-                y3 -= 605 * 3;
+                let curBackground = backgrounds[0];
+                curBackground.move();
         }
+
+
+// --------------------------------------------------------------------------------
+// набор астероидов
+// --------------------------------------------------------------------------------
+
+        // function Asteroid()
+        // {
+        //     this.x = 0;
+        //     this.y = 0;
+        //     this.life = this.size;
+        // }
+        //
+        // Asteroid.prototype.type = 'asteroid';
+        // Asteroid.prototype.size = 20;
+        // Asteroid.prototype.x = 650;
+        // Asteroid.prototype.y = 100;
+        // Asteroid.prototype.dx = 2;
+        // Asteroid.prototype.dy = 10;
+        // Asteroid.prototype.life = 0;
+        // Asteroid.prototype.image = 'some image';
+        // Asteroid.prototype.move = function ()
+        // {
+        //     this.x += this.dx;
+        //     this.y += this.dy;
+        // };
+        //
+        //
+        // let asteroid1 = new Asteroid;
+
+        // конструктор кораблей
+        function AbstractFlyingObject()
+        {
+            this.life = this.size;
+        }
+
+        AbstractFlyingObject.prototype.type = '';
+        AbstractFlyingObject.prototype.size = 0;
+        AbstractFlyingObject.prototype.x = 0;
+        AbstractFlyingObject.prototype.y = 0;
+        AbstractFlyingObject.prototype.dx = 0;
+        AbstractFlyingObject.prototype.dy = 0;
+        AbstractFlyingObject.prototype.life = 0;
+        AbstractFlyingObject.prototype.image = '';
+
+        AbstractFlyingObject.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2, this.size, this.size);
+        };
+
+        AbstractFlyingObject.prototype.move = function ()
+        {
+            this.x += this.dx;
+            this.y += this.dy;
+        };
+
+
+        // астероид 1
+        function Asteroid1()
+        {
+            this.size = getRandomFloat(30, 120);
+            this.x = getRandomFloat(-50, 650);
+            this.y = getRandomFloat(-300, -50);
+            this.dx = getRandomFloat(-1, 1);
+            this.dy = getRandomFloat(1, 8);
+            this.life = this.size;
+            this.image = images['asteroid' + Math.round(getRandomFloat(1, 13))];
+        }
+
+        Asteroid1.prototype = new AbstractFlyingObject();
+        Asteroid1.prototype.type = 'asteroid';
+
+
+        // осколок астероидa
+        function Splinter(size, x, y, dx, dy)
+        {
+            this.size = size / 5;
+            this.x = x;
+            this.y = y;
+            this.dx = dx + this.accelerateX;
+            this.dy = dy + this.accelerateY;
+            this.accelerateX = Math.round(getRandomFloat(-4, 4));
+            this.accelerateY = Math.round(getRandomFloat(-4, 4));
+            this.image = images['splinter' + Math.round(getRandomFloat(1, 13))];
+
+        }
+
+        Splinter.prototype = new Asteroid1();
+        Splinter.prototype.type = 'splinter';
+        Splinter.prototype.accelerateX = 0;
+        Splinter.prototype.accelerateY = 0;
 
 
         // --------------------------------------------------------------------------------
@@ -113,17 +282,11 @@ window.addEventListener('load',
 
         let countAsteroid = 0;
 
-        function addAsteroids(amount)
+        function addAsteroids(amount, typeAsteroid)
         {
             for (let i = 0; i < amount; i++)
             {
-                let asteroid = {};
-                asteroid.size = getRandomFloat(20, 100);
-                asteroid.dy = getRandomFloat(1, 10);
-                asteroid.x = getRandomFloat(-50, 650);
-                asteroid.dx = getRandomFloat(-1, 1);
-                asteroid.y = getRandomFloat(-500, -100);
-                asteroid.life = asteroid.size;
+                let asteroid = new typeAsteroid();
                 asteroids.push(asteroid);
             }
         }
@@ -133,50 +296,45 @@ window.addEventListener('load',
             for (let i = 0; i < asteroids.length; i++)
             {
                 let asteroid = asteroids[i];
-                context.drawImage(images.asteroid, asteroid.x - asteroid.size / 2, asteroid.y - asteroid.size / 2, asteroid.size, asteroid.size);
+                asteroid.draw();
             }
         }
 
-        function moveAsteroids(time)
+        function moveAsteroids()
         {
             for (let i = 0; i < asteroids.length; i++)
             {
                 let asteroid = asteroids[i];
-                asteroid.x += asteroid.dx;
-                asteroid.y += asteroid.dy;
-                if (asteroid.y >= 1000 || asteroid.x < -60 || asteroid.x > 660)
+                asteroid.move();
+                if (asteroid.y >= 950 || asteroid.x < -90 || asteroid.x > 690)
                 {
-                    killAsteroid(i);
                     asteroids.splice(i, 1);
                     i--;
+                    if (asteroid.type === 'asteroid')
+                        addAsteroidAfterKill(1, Asteroid1);
                 }
             }
         }
 
-        function intervalAddAsteroid(numAddAsteroid, addTime)
+        function intervalAddAsteroid(numAddAsteroid, typeAsteroid, addTime)
         {
             setInterval(function ()
             {
-                addAsteroidAfterKill(numAddAsteroid);
+                addAsteroidAfterKill(numAddAsteroid, typeAsteroid);
             }, addTime)
         }
 
-        function killAsteroid(index)
+        function addAsteroidAfterKill(numAddAsteroids, typeAsteroid)
         {
-            addAsteroidAfterKill(1);
-        }
-
-        function addAsteroidAfterKill(numAddAsteroids)
-        {
-            if (!isGameOver && !pause)
+            if (gameState === 'game')
             {
                 if (countAsteroid < maxAsteroidsInLevel)
                 {
-                    addAsteroids(numAddAsteroids);
+                    addAsteroids(numAddAsteroids, typeAsteroid);
                     countAsteroid++;
                 }
                 if (!asteroids.length)
-                    endLevel1 = true;
+                    gameState = 'postmission';
             }
         }
 
@@ -184,145 +342,192 @@ window.addEventListener('load',
         // --------------------------------------------------------------------------------
         // осколки астероидов
         // --------------------------------------------------------------------------------
+        // let splinters = [];
+        //
+        // function addSplinter(amount)
+        // {
+        //     for (let i = 0; i < amount; i++)
+        //     {
+        //         let splinter = new Splinter();
+        //         splinters.push(splinter);
+        //     }
+        // }
+        //
+        // function drawSplinter()
+        // {
+        //     for (let i = 0; i < splinters.length; i++)
+        //     {
+        //         let splinter = splinters[i];
+        //         context.drawImage(splinter.image, splinter.x - splinter.image.width / 2, splinter.y - splinter.image.width / 2/*, splinter.size, splinter.size*/);
+        //     }
+        //
+        // }
+        // function moveSplinter()
+        // {
+        //     for (let i = 0; i < splinters.length; i++)
+        //     {
+        //         let splinter = splinters[i];
+        //         splinter.x += splinter.dx + splinter.accelerateX;
+        //         splinter.y += splinter.dy + splinter.accelerateY;
+        //         if (splinter.y >= 1000 || splinter.x < -90 || splinter.x > 690)
+        //         {
+        //             splinters.splice(i, 1);
+        //             i--;
+        //         }
+        //     }
+        // }
 
 
-        let splinters = [];
+// --------------------------------------------------------------------------------
+// набор кораблей
+// --------------------------------------------------------------------------------
 
-        function addSplinter(amount, size, x, y, dx, dy)
+        let horisontalMovement = 0;
+
+        // конструктор кораблей
+        function AbstractShip()
         {
-            for (let i = 0; i < amount; i++)
+        }
+
+        AbstractShip.prototype.size = 0;
+        AbstractShip.prototype.horisontalGas = 0;
+        AbstractShip.prototype.x = 0;
+        AbstractShip.prototype.y = 0;
+        AbstractShip.prototype.life = 0;
+        AbstractShip.prototype.recoveryShieldHPerTick = 0.03;
+        AbstractShip.prototype.image = images.ship1;
+
+        AbstractShip.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
+        };
+
+        AbstractShip.prototype.move = function ()
+        {
+            if (horisontalMovement === -1)
             {
-                let splinter = {};
-                splinter.size = size / 5;
-                splinter.x = x;
-                splinter.y = y;
-                splinter.dx = dx;
-                splinter.dy = dy;
-                splinter.accelerateX = Math.round(getRandomFloat(-4, 4));
-                splinter.accelerateY = Math.round(getRandomFloat(-4, 4));
-                splinter.life = 20;
-                splinter.image = images['splinter' + Math.round(getRandomFloat(1, 13))];
-                splinters.push(splinter);
+                this.horisontalGas += -1;
+                if (this.horisontalGas < -10)
+                    this.horisontalGas = -10;
             }
-        }
-
-        function drawSplinter()
-        {
-            for (let i = 0; i < splinters.length; i++)
+            else if (horisontalMovement === 1)
             {
-                let splinter = splinters[i];
-                context.drawImage(splinter.image, splinter.x - splinter.image.width / 2, splinter.y - splinter.image.width / 2/*, splinter.size, splinter.size*/);
+                this.horisontalGas += 1;
+                if (this.horisontalGas > 10)
+                    this.horisontalGas = 10;
             }
-
-        }
-
-        function moveSplinter()
-        {
-            for (let i = 0; i < splinters.length; i++)
+            else
             {
-                let splinter = splinters[i];
-                splinter.x += splinter.dx + splinter.accelerateX;
-                splinter.y += splinter.dy + splinter.accelerateY;
-                if (splinter.y >= 1000 || splinter.x < -60 || splinter.x > 660)
-                    i = killSplinter(i);
+                if (this.horisontalGas > 0)
+                {
+                    this.horisontalGas -= 0.5;
+                    if (this.horisontalGas < 0)
+                        this.horisontalGas = 0;
+                }
+                if (this.horisontalGas < 0)
+                {
+                    this.horisontalGas += 0.5;
+                    if (this.horisontalGas > 0)
+                        this.horisontalGas = 0;
+                }
             }
+
+            this.x += this.horisontalGas;
+
+            if (this.x < 10)
+                this.x = 10;
+
+            if (this.x > 590)
+                this.x = 590;
+        };
+
+
+        function PlayerShip()
+        {
         }
 
-        function killSplinter(index)
+        PlayerShip.prototype = new AbstractShip();
+        PlayerShip.prototype.size = 50;
+        PlayerShip.prototype.x = 300;
+        PlayerShip.prototype.y = 850;
+        PlayerShip.prototype.life = 500;
+
+        function EnemyShip()
         {
-            splinters.splice(index, 1);
-            index--;
-            return index;
         }
+
+        EnemyShip.prototype = new AbstractShip();
+        EnemyShip.prototype.size = 50;
+        EnemyShip.prototype.x = 300;
+        EnemyShip.prototype.y = 50;
+        EnemyShip.prototype.life = 1000;
+
+
+        // корабль игрока1
+        function Playership1()
+        {
+        }
+
+        Playership1.prototype = new PlayerShip();
+        Playership1.prototype.image = images.ship1;
 
 
         // --------------------------------------------------------------------------------
         // корабль
         // --------------------------------------------------------------------------------
 
+        let ships = [];
 
-        let playership = {};
-
-        function addPlayership()
+        function addShip(typeShip)
         {
-            playership.size = 50;
-            playership.horisontalGas = 0;
-            playership.x = 300;
-            playership.y = 850;
-            playership.life = 500;
+            let ship = new typeShip();
+            ships.push(ship);
         }
 
-        function drawPlayership()
+        function drawShips()
         {
-
-            context.drawImage(images.playership, playership.x - playership.size / 2, playership.y - playership.size / 2, playership.size, playership.size);
-        }
-
-        function movePlayership()
-        {
-            if (horisontalMovement === -1)
+            if (gameState !== 'gameOver')
             {
-                playership.horisontalGas += -1;
-                if (playership.horisontalGas < -10)
-                    playership.horisontalGas = -10;
-            }
-            else if (horisontalMovement === 1)
-            {
-                playership.horisontalGas += 1;
-                if (playership.horisontalGas > 10)
-                    playership.horisontalGas = 10;
-            }
-            else
-            {
-                if (playership.horisontalGas > 0)
+                for (let i = 0; i < ships.length; i++)
                 {
-                    playership.horisontalGas -= 0.5;
-                    if (playership.horisontalGas < 0)
-                        playership.horisontalGas = 0;
-                }
-                if (playership.horisontalGas < 0)
-                {
-                    playership.horisontalGas += 0.5;
-                    if (playership.horisontalGas > 0)
-                        playership.horisontalGas = 0;
+                    let ship = ships[i];
+                    ship.draw();
                 }
             }
+        }
 
-            playership.x += playership.horisontalGas;
+        function moveShips()
+        {
+            for (let i = 0; i < ships.length; i++)
+            {
+                let ship = ships[i];
+                ship.move();
 
-            if (playership.x < 10)
-                playership.x = 10;
-
-            if (playership.x > 590)
-                playership.x = 590;
+                // ship.curentTime += tickTime;
+            }
         }
 
 
-        // --------------------------------------------------------------------------------
-        // набор снарядов для выстрела
-        // --------------------------------------------------------------------------------
-
-
-        let shells = {};
+// --------------------------------------------------------------------------------
+// набор снарядов для выстрела
+// --------------------------------------------------------------------------------
 
         // конструктор снаряда
         function AbstractShell()
         {
         }
 
+        AbstractShell.prototype.x = 300;
+        AbstractShell.prototype.y = 650;
         AbstractShell.prototype.dy = 15;
         AbstractShell.prototype.timeoutFiringRate = 100;
         AbstractShell.prototype.power = 10;
         AbstractShell.prototype.image = images.shell1;
-        // AbstractShell.prototype.numberShell = 1;
-        // AbstractShell.prototype.hpPerSec = this.prototype.power * 1000 / this.prototype.timeoutFiringRate;
 
-        // метод draw
         AbstractShell.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
         };
-        // метод move
         AbstractShell.prototype.move = function ()
         {
             this.y -= this.dy;
@@ -332,14 +537,17 @@ window.addEventListener('load',
         // импульсный лазер (оружие 1)
         function PulseLaser()
         {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('PulseLaser: ' + this.hpPerSec + ' hpPerSec');
         }
 
         PulseLaser.prototype = new AbstractShell;
-        // PulseLaser.prototype.hpPerSec = 100;
 
         // мощный лазер (оружие 2)
         function PowerLaser()
         {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('PowerLaser: ' + this.hpPerSec + ' hpPerSec');
         }
 
         PowerLaser.prototype = new AbstractShell;
@@ -347,12 +555,12 @@ window.addEventListener('load',
         PowerLaser.prototype.timeoutFiringRate = 175;
         PowerLaser.prototype.power = 23;
         PowerLaser.prototype.image = images.shell2;
-        // PowerLaser.prototype.numberShell = 2;
-        // PowerLaser.prototype.hpPerSec = 131;
 
         // 2ой лазер (оружие 3)
         function GreenLaser()
         {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('GreenLaser: ' + this.hpPerSec + ' hpPerSec');
         }
 
         GreenLaser.prototype = new AbstractShell;
@@ -360,12 +568,12 @@ window.addEventListener('load',
         GreenLaser.prototype.timeoutFiringRate = 150;
         GreenLaser.prototype.power = 25;
         GreenLaser.prototype.image = images.shell3;
-        // GreenLaser.prototype.numberShell = 3;
-        // GreenLaser.prototype.hpPerSec = 166;
 
         // 3ой лазер (оружие 4)
         function BlueLaser()
         {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('BlueLaser: ' + this.hpPerSec + ' hpPerSec');
         }
 
         BlueLaser.prototype = new AbstractShell;
@@ -373,26 +581,40 @@ window.addEventListener('load',
         BlueLaser.prototype.timeoutFiringRate = 175;
         BlueLaser.prototype.power = 35;
         BlueLaser.prototype.image = images.shell4;
-        // BlueLaser.prototype.numberShell = 4;
-        // BlueLaser.prototype.hpPerSec = 200;
 
         // мини фотонная пушка (оружие 5)
         function MiniPhotonGun()
         {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('MiniPhotonGun: ' + this.hpPerSec + ' hpPerSec');
         }
 
         MiniPhotonGun.prototype = new AbstractShell;
-        MiniPhotonGun.prototype.dy = 30;
-        MiniPhotonGun.prototype.timeoutFiringRate = 400;
-        MiniPhotonGun.prototype.power = 100;
+        MiniPhotonGun.prototype.dy = 35;
+        MiniPhotonGun.prototype.timeoutFiringRate = 300;
+        MiniPhotonGun.prototype.power = 120;
         MiniPhotonGun.prototype.image = images.shell5;
-        // MiniPhotonGun.prototype.numberShell = 5;
-        // MiniPhotonGun.prototype.hpPerSec = 250;
 
-        // мега фотонная пушка (оружие 6)
+
+        // ракета (оружие 6)
+        function Rocket()
+        {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('Rocket: ' + this.hpPerSec + ' hpPerSec');
+        }
+
+        Rocket.prototype = new AbstractShell;
+        Rocket.prototype.dy = 5;
+        Rocket.prototype.timeoutFiringRate = 300;
+        Rocket.prototype.power = 300;
+        Rocket.prototype.image = images.rocket1;
+
+        // мега фотонная пушка (оружие7)
 
         // function PhotonGun()
         // {
+        // this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+        // console.log('PhotonGun ' + this.hpPerSec + ' hpPerSec');
         // }
         //
         // PhotonGun.prototype = new AbstractShell;
@@ -401,26 +623,11 @@ window.addEventListener('load',
         // PhotonGun.prototype.power = 5;
         // PhotonGun.prototype.image = images.shell6;
         // PhotonGun.prototype.numberShell = 6;
-        // MiniPhotonGun.prototype.hpPerSec = 300;
-
-        // ракета (оружие 6)
-        function Rocket()
-        {
-        }
-
-        Rocket.prototype = new AbstractShell;
-        Rocket.prototype.dy = 5;
-        Rocket.prototype.timeoutFiringRate = 300;
-        Rocket.prototype.power = 300;
-        Rocket.prototype.image = images.rocket;
-        // Rocket.prototype.numberShell = 7;
-        // Rocket.prototype.hpPerSec = 1000;
 
 
         // --------------------------------------------------------------------------------
         // выстрелы
         // --------------------------------------------------------------------------------
-
 
         let shots = [];
         let curShell = PulseLaser;
@@ -437,17 +644,17 @@ window.addEventListener('load',
             //     changeCurShellTo(MiniPhotonGun);
             // else if (score >= 800)
             //     changeCurShellTo(Rocket);
-            if (score < 500)
-                curShell = PulseLaser;
-            else if (score >= 500 && score < 1000)
+            if (score < 400)
+                curShell = Rocket;
+            else if (score >= 400 && score < 1000)
                 changeCurShellTo(PowerLaser);
-            else if (score >= 1000 && score < 2000)
+            else if (score >= 1000 && score < 1500)
                 changeCurShellTo(GreenLaser);
-            else if (score >= 2000 && score < 3000)
+            else if (score >= 1500 && score < 2000)
                 changeCurShellTo(BlueLaser);
-            else if (score >= 3000 && score < 4000)
+            else if (score >= 2000 && score < 3000)
                 changeCurShellTo(MiniPhotonGun);
-            else if (score >= 5000)
+            else if (score >= 3000)
                 changeCurShellTo(Rocket);
         }
 
@@ -464,10 +671,23 @@ window.addEventListener('load',
         function addShot()
         {
             checkCurShell();
-            let shot = new curShell();
-            shot.x = playership.x;
-            shot.y = playership.y - 10;
+            let shot = new curShell;
+            let ship = ships[0];
+            shot.x = ship.x;
+            shot.y = ship.y - 10;
             shots.push(shot);
+        }
+
+        function drawShots()
+        {
+            if (gameState !== 'gameOver')
+            {
+                for (let i = 0; i < shots.length; i++)
+                {
+                    let shot = shots[i];
+                    shot.draw();
+                }
+            }
         }
 
         function moveShots()
@@ -476,84 +696,137 @@ window.addEventListener('load',
             {
                 let shot = shots[i];
                 shot.move();
-                if (shot.y <= -100)
-                    deleteShellAtHit(i);
+                if (shot.y <= -60)
+                {
+                    shots.splice(i, 1);
+                    i--;
+                }
             }
         }
 
-        function drawShots()
+
+// --------------------------------------------------------------------------------
+// набор взрывов
+// --------------------------------------------------------------------------------
+
+
+        const MAX_EXPLOSION_LIFETIME = 1000;
+        const EXPLOSION_FRAMES_AMOUNT = 9;
+
+        function AbstractExplosion()
         {
-            for (let i = 0; i < shots.length; i++)
-            {
-                let shot = shots[i];
-                shot.draw();
-            }
         }
+
+        AbstractExplosion.prototype.size = 0;
+        AbstractExplosion.prototype.x = 0;
+        AbstractExplosion.prototype.y = 0;
+        AbstractExplosion.prototype.dx = 0;
+        AbstractExplosion.prototype.dy = 0;
+        AbstractExplosion.prototype.curentAnimationTime = 0;
+        AbstractExplosion.prototype.totalAnimationTime = 0;
+        AbstractExplosion.prototype.image = '';
+
+        AbstractExplosion.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+        };
+
+        AbstractExplosion.prototype.move = function ()
+        {
+            this.x += this.dx;
+            this.y += this.dy;
+        };
+
+
+        // взрыв астероида
+        function AsteroidExplosion(size, x, y, dx, dy, animationTime)
+        {
+            this.size = size;
+            this.x = x;
+            this.y = y;
+            this.dx = dx / 2;
+            this.dy = dy / 2;
+            this.totalAnimationTime = this.size / 120 * animationTime;
+            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
+            console.log(this.image, this.totalAnimationTime);
+        }
+
+        AsteroidExplosion.prototype = new AbstractExplosion();
+
+        // взрыв осколка
+        function SplinterExplosion(size, x, y, dx, dy, animationTime)
+        {
+            this.size = size;
+            this.x = x;
+            this.y = y;
+            this.dx = dx;
+            this.dy = dy;
+            this.totalAnimationTime = this.size / 120 * animationTime;
+            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
+        }
+
+        SplinterExplosion.prototype = new AbstractExplosion();
+
+        // взрыв снаряда
+        function ShellExplosion(size, x, y, dx, dy, animationTime)
+        {
+            this.size = size;
+            this.x = x;
+            this.y = y;
+            this.dx = dx;
+            this.dy = dy;
+            this.totalAnimationTime = this.size / 120 * animationTime;
+            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
+        }
+
+        ShellExplosion.prototype = new AbstractExplosion();
+
+        // взрыв корабля
+        function PlayershipExplosion(size, x, y, dx, dy, animationTime)
+        {
+            this.size = size;
+            this.x = x;
+            this.y = y;
+            this.dx = dx;
+            this.dy = dy;
+            this.totalAnimationTime = this.size / 120 * animationTime;
+            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
+        }
+
+        PlayershipExplosion.prototype = new AbstractExplosion();
 
 
         // --------------------------------------------------------------------------------
         // взрывы
         // --------------------------------------------------------------------------------
 
-
         let explosions = [];
 
-        const EXPLOSION_LIFETIME = 250;
-        const EXPLOSION_FRAMES_AMOUNT = 9;
-
-
-        function addExplosion(size, x, y, dx, dy)
+        function addExplosion(typeExplosion)
         {
-            // DEBUG
-            // if (explosions.length > 0)
-            //     return;
-
-            if (!isGameOver)
-            {
-                let explosion = {};
-
-                explosion.size = size / 32;
-                explosion.x = x;
-                explosion.y = y;
-                explosion.dx = dx;
-                explosion.dy = dy;
-                explosion.animationTime = 0;
-                explosion.lifeTime = EXPLOSION_LIFETIME;
-
-                explosions.push(explosion);
-            }
+            let explosion = new typeExplosion();
+            explosions.push(explosion);
         }
-
 
         function drawExplosions()
         {
             for (let i = 0; i < explosions.length; i++)
             {
                 let explosion = explosions[i];
-
-                let image = images['explosion' + (getFrameNumberByAnimationTime(explosion.animationTime, explosion.lifeTime, EXPLOSION_FRAMES_AMOUNT) + 1)];
-
-                context.drawImage(image,
-                    explosion.x - (image.width * explosion.size) / 2,
-                    explosion.y - (image.height * explosion.size) / 2,
-                    (image.width * explosion.size),
-                    (image.height * explosion.size));
+                explosion.draw();
             }
         }
 
-
-        function moveExplosions(time)
+        function moveExplosions(tickTime)
         {
             for (let i = 0; i < explosions.length; i++)
             {
                 let explosion = explosions[i];
+                explosion.move();
 
-                explosion.x += explosion.dx / 2;
-                explosion.y += explosion.dy / 2;
+                explosion.curentAnimationTime += tickTime;
 
-                explosion.animationTime += time;
-
-                if (explosion.animationTime >= explosion.lifeTime)
+                if (explosion.curentAnimationTime >= explosion.totalAnimationTime)
                 {
                     explosions.splice(i, 1);
                     i--;
@@ -561,317 +834,342 @@ window.addEventListener('load',
             }
         }
 
+        // // --------------------------------------------------------------------------------
+        // // взрывы
+        // // --------------------------------------------------------------------------------
+        //
+        //
+        // let explosions = [];
+        //
+        // const MAX_EXPLOSION_LIFETIME = 1000;
+        // const EXPLOSION_FRAMES_AMOUNT = 9;
+        //
+        //
+        // function addExplosion(size, x, y, dx, dy)
+        // {
+        //     let explosion = {};
+        //
+        //     explosion.size = size / 32;
+        //     explosion.x = x;
+        //     explosion.y = y;
+        //     explosion.dx = dx;
+        //     explosion.dy = dy;
+        //     explosion.animationTime = 0;
+        //     explosion.lifeTime = EXPLOSION_LIFETIME;
+        //
+        //     explosions.push(explosion);
+        // }
+        //
+        //
+        // function drawExplosions()
+        // {
+        //     for (let i = 0; i < explosions.length; i++)
+        //     {
+        //         let explosion = explosions[i];
+        //
+        //         let image = images['explosion' + (getFrameNumberByAnimationTime(explosion.animationTime, explosion.lifeTime, EXPLOSION_FRAMES_AMOUNT) + 1)];
+        //
+        //         context.drawImage(image,
+        //             explosion.x - (image.width * explosion.size) / 2,
+        //             explosion.y - (image.height * explosion.size) / 2,
+        //             (image.width * explosion.size),
+        //             (image.height * explosion.size));
+        //     }
+        // }
 
-        // --------------------------------------------------------------------------------
-        // столкновение корабля с астероидом
-        // --------------------------------------------------------------------------------
+        // function drawExplosions()
+        // {
+        //     for (let i = 0; i < explosions.length; i++)
+        //     {
+        //         let explosion = explosions[i];
+        //
+        //         let currentTime = (new Date).getTime();
+        //
+        //         // остановка взрыва при паузе
+        //         if (pause)
+        //             explosion.startTime = explosion.startTime + currentTime - previousTickTime;
+        //         previousTickTime = currentTime;
+        //
+        //
+        //         for (let k = 1; k <= 9; k++)
+        //         {
+        //             if (currentTime <= explosion.startTime + explosion.imageLifeTime * k)
+        //             {
+        //                 context.drawImage(images['explosion' + k], explosion.x - explosion.size / 2, explosion.y - explosion.size / 2, explosion.size, explosion.size);
+        //                 break;
+        //             }
+        //         }
+        //         if (currentTime > explosion.startTime + explosion.lifeTime)
+        //         {
+        //             explosions.splice(i, 1);
+        //             i--;
+        //         }
+        //     }
+        // }
+
+        // let explosions = [];
+        // let previousTickTime = 0;
+        // let timeRatio = 10;  // время жизни взрыва (коэф.)
+        //
+        //
+        // function addExplosion(size, speed, x, offsetX, y, timeRatio)
+        // {
+        //     if (!isGameOver)
+        //     {
+        //         let explosion = {};
+        //         explosion.size = size;
+        //         explosion.speed = speed;
+        //         explosion.x = x;
+        //         explosion.offsetX = offsetX;
+        //         explosion.y = y;
+        //         explosion.lifeTime = Math.round(size * timeRatio);
+        //         explosion.imageLifeTime = Math.round(size * timeRatio / 9);
+        //         explosion.startTime = (new Date).getTime();
+        //         explosions.push(explosion);
+        //     }
+        // }
+        //
+        //
+        // function drawExplosions()
+        // {
+        //     for (let i = 0; i < explosions.length; i++)
+        //     {
+        //         let explosion = explosions[i];
+        //
+        //         let currentTime = (new Date).getTime();
+        //
+        //         // остановка взрыва при паузе
+        //         if (pause)
+        //             explosion.startTime = explosion.startTime + currentTime - previousTickTime;
+        //         previousTickTime = currentTime;
+        //
+        //
+        //         for (let k = 1; k <= 9; k++)
+        //         {
+        //             if (currentTime <= explosion.startTime + explosion.imageLifeTime * k)
+        //             {
+        //                 context.drawImage(images['explosion' + k], explosion.x - explosion.size / 2, explosion.y - explosion.size / 2, explosion.size, explosion.size);
+        //                 break;
+        //             }
+        //         }
+        //         if (currentTime > explosion.startTime + explosion.lifeTime)
+        //         {
+        //             explosions.splice(i, 1);
+        //             i--;
+        //         }
+        //     }
+        //
+        // }
+        //
+        //
+        // function moveExplosions()
+        // {
+        //     for (let i = 0; i < explosions.length; i++)
+        //     {
+        //         let explosion = explosions[i];
+        //         explosion.x += explosion.offsetX / 2;
+        //         explosion.y += explosion.speed / 2;
+        //     }
+        // }
 
 
-        function checkPlayershipAndAsteroidsCollisions()
+// --------------------------------------------------------------------------------
+// обработка столкновений
+// --------------------------------------------------------------------------------
+
+        function gameEngine()
         {
             for (let i = 0; i < asteroids.length; i++)
             {
                 let asteroid = asteroids[i];
-                let dx = asteroid.x - playership.x;
-                let dy = asteroid.y - playership.y;
-                let distanse = Math.sqrt(dx * dx + dy * dy);
-                let colissionDistanse = (asteroid.size / 2 + playership.size / 2) * 0.7;
-                if (distanse <= colissionDistanse)
+
+                // столкновение астероида с кораблем
+                for (let k = 0; k < ships.length; k++)
                 {
-                    hitPlayership(asteroid.life);
-                    killAsteroid(i);
-                    asteroids.splice(i, 1);
-                    addExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
-                    break;
+                    let ship = ships[k];
+
+                    let dx = asteroid.x - ship.x;
+                    let dy = asteroid.y - ship.y;
+                    let distanse = Math.sqrt(dx * dx + dy * dy);
+
+                    let distanseRatio;
+                    if (asteroid.type === 'asteroid')
+                        distanseRatio = 0.7;
+                    if (asteroid.type === 'splinter')
+                        distanseRatio = 1;
+
+                    let colissionDistanse = (asteroid.size / 2 + ship.size / 2) * distanseRatio;
+
+                    if (distanse <= colissionDistanse)
+                    {
+                        ship.life -= asteroid.life;
+                        addExplosion(AsteroidExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
+
+                        if (asteroid.type === 'asteroid')
+                            addAsteroidAfterKill(1, Asteroid1);
+
+                        asteroids.splice(i, 1);
+                        i--;
+
+                        if (ship.life <= 0)
+                        {
+                            ship.life = 0;
+                            addExplosion(PlayershipExplosion(ship.size * 2, ship.x, ship.y, 0, 0, 500));
+                            gameState = 'gameOver';
+                        }
+                    }
                 }
 
-            }
-        }
-
-
-        function hitPlayership(hp)
-        {
-            playership.life -= hp;
-            if (playership.life <= 0)
-            {
-                playership.life = 0;
-                addExplosion(playership.size * 2, playership.x, playership.y, 0, 0);
-                gameOver();
-            }
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // столкновение снаряда с астероидом
-        // --------------------------------------------------------------------------------
-
-
-        function checkShellsAndAsteroidsCollisions()
-        {
-            for (let i = 0; i < asteroids.length; i++)
-            {
-                let asteroid = asteroids[i];
-
-                for (let k = 0; k < shots.length; k++)
+                // попадание снаряда в астероид
+                for (let j = 0; j < shots.length; j++)
                 {
-                    let shot = shots[k];
+                    let shot = shots[j];
 
                     let dx = asteroid.x - shot.x;
                     let dy = asteroid.y - shot.y;
                     let distanse = Math.sqrt(dx * dx + dy * dy);
-                    let colissionDistanse = (asteroid.size / 2 + shot.y / 2) * 0.13;
+
+                    let distanseRatio;
+                    if (asteroid.type === 'asteroid')
+                        distanseRatio = 0.13;
+                    if (asteroid.type === 'splinter')
+                        distanseRatio = 0.08;
+
+                    let colissionDistanse = (asteroid.size / 2 + shot.image.height / 2) * distanseRatio;
+
                     if (distanse <= colissionDistanse)
                     {
-                        hitAsteroid(shot.power, i);
+                        asteroid.life -= shot.power;
 
-                        deleteShellAtHit(k);
+                        if (asteroid.life <= 0)
+                        {
+                            if (asteroid.type === 'asteroid')
+                            {
+                                addScore(asteroid.life / 4);
+                                addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
+                                addAsteroidAfterKill((Math.floor(asteroid.size / 30)) * 2, Splinter);
+                            }
+                            if (asteroid.type === 'splinter')
+                            {
+                                addScore(asteroid.life);
+                                addExplosion(SplinterExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 500));
+                            }
 
-                        if (curShell === Rocket)
-                            addExplosion(getRandomFloat(100, 300), shot.x, shot.y, 0, 0);
-
-                        if (curShell === MiniPhotonGun)
-                            addExplosion(getRandomFloat(300, 600), shot.x, shot.y, 0, 0);
+                            asteroids.splice(i, 1);
+                            i--;
+                            addAsteroidAfterKill(1, Asteroid1);
+                        }
                         else
-                            addExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0);
+                        {
+                            addScore(1);
+
+                            if (curShell === Rocket)
+                                addExplosion(ShellExplosion(getRandomFloat(100, 300), shot.x, shot.y, 0, 0, 500));
+
+                            if (curShell === MiniPhotonGun)
+                                addExplosion(ShellExplosion(getRandomFloat(300, 600), shot.x, shot.y, 0, 0, 500));
+                            else
+                                addExplosion(ShellExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0, 500));
+                        }
+
+                        shots.splice(j, 1);
+                        j--;
                     }
                 }
             }
         }
 
-        function hitAsteroid(hp, indexAsteroid)
+
+// --------------------------------------------------------------------------------
+// состояния игры
+// --------------------------------------------------------------------------------
+
+        let gameState = 'premission';  // premission, game, postmission, gameOver
+        let pause = false;
+        let premissionTimeOut = true;
+        let gameOverTimeOut = true;
+
+        function premissionTimeout()
         {
-            let asteroid = asteroids[indexAsteroid];
-            asteroid.life -= hp;
-            addScore(hp / hp);
-            if (asteroid.life <= 0)
+            if (gameState === 'premission' && premissionTimeOut)
             {
-                addScore(asteroid.size / 4);
-                killAsteroid(indexAsteroid);
-                asteroids.splice(indexAsteroid, 1);
-                addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
-                addSplinter((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
-            }
-        }
-
-        function deleteShellAtHit(indexShell)
-        {
-            shots.splice(indexShell, 1);
-            indexShell--;
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // столкновение корабля с осколком
-        // --------------------------------------------------------------------------------
-
-
-        function checkPlayershipAndSplintersCollisions()
-        {
-            for (let i = 0; i < splinters.length; i++)
-            {
-                let splinter = splinters[i];
-                let dx = splinter.x - playership.x;
-                let dy = splinter.y - playership.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                let collisionDistance = (splinter.size / 2 + playership.size / 2) * 1;
-                if (distance <= collisionDistance)
+                premissionTimeOut = false;
+                setTimeout(function ()
                 {
-                    hitPlayership(splinter.life);
-                    killSplinter(i);
-                    addExplosion(splinter.size * 2, splinter.x, splinter.y, splinter.dx + splinter.accelerateX, splinter.dy + splinter.accelerateY);
-                    break;
-                }
-
+                    gameState = 'game';
+                    addAsteroids(5, Asteroid1);
+                }, 3000);
             }
         }
 
-
-        // --------------------------------------------------------------------------------
-        // столкновение снаряда с осколком
-        // --------------------------------------------------------------------------------
-
-
-        function checkShellsAndSplintersCollisions()
+        function gameOverTimeout()
         {
-            for (let i = 0; i < splinters.length; i++)
+            if (gameState === 'gameOver' && gameOverTimeOut)
             {
-                let splinter = splinters[i];
-
-                for (let k = 0; k < shots.length; k++)
+                setTimeout(function ()
                 {
-                    let shot = shots[k];
-
-                    let dx = splinter.x - shot.x;
-                    let dy = splinter.y - shot.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    let collisionDistance = (splinter.size / 2 + shot.y / 2) * 0.08;
-                    if (distance <= collisionDistance)
-                    {
-                        hitSplinter(shot.power, i);
-                        deleteShellAtHit(k);
-                        addExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0);
-                    }
-                }
+                    gameOverTimeOut = false;
+                }, 500);
             }
         }
 
-        function hitSplinter(hp, indexSplinter)
+        function drawPremission(numLevel, text)
         {
-            let splinter = splinters[indexSplinter];
-            splinter.life -= hp;
-            if (splinter.life <= 0)
-            {
-                addScore(5);
-                killSplinter(indexSplinter);
-                addExplosion(splinter.size * 2, splinter.x, splinter.y, splinter.dx + splinter.accelerateX, splinter.dy + splinter.accelerateY);
-            }
-            else
-                addScore(hp / hp);
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // начало игры уровень 1
-        // --------------------------------------------------------------------------------
-
-
-        let level1 = true;
-        setTimeout(function ()
-        {
-            level1 = false;
-        }, 3000);
-
-        function drawLevel1()
-        {
-            if (level1)
+            if (gameState === 'premission')
             {
                 context.font = '40pt Calibri';
                 context.fillStyle = 'red';
                 context.textAlign = 'center';
-                context.fillText('LEVEL 1', 300, 450);
+                context.fillText('LEVEL ' + numLevel, 300, 450);
                 context.font = 'italic 20pt Calibri';
-                context.fillText('the spacecraft enters the asteroid field', 300, 520);
+                context.fillText(text, 300, 520);
             }
         }
 
-
-        // --------------------------------------------------------------------------------
-        // пройденный уровень
-        // --------------------------------------------------------------------------------
-
-
-        let endLevel1 = false;
-
-        function drawEndLevel()
+        function drawPostmission(numLevel, text)
         {
-            if (endLevel1)
+            if (gameState === 'postmission')
             {
                 context.font = '40pt Calibri';
                 context.fillStyle = 'red';
                 context.textAlign = 'center';
-                context.fillText('LEVEL COMPLETED', 300, 450);
+                context.fillText('LEVEL ' + numLevel + ' COMPLETED', 300, 450);
                 context.font = 'italic 20pt Calibri';
-                context.fillText('the asteroid field is successfully completed', 300, 520);
+                context.fillText(text, 300, 520);
             }
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // конец игры
-        // --------------------------------------------------------------------------------
-
-
-        let isGameOver = false;
-
-        function gameOver()
-        {
-            setTimeout(function ()
-            {
-                isGameOver = true;
-                let audio = document.getElementById('audio');
-                playAudio(audioSrc.gameOver);
-            }, 400);
         }
 
         function drawGameOver()
         {
-            context.font = '40pt Calibri';
-            context.fillStyle = 'red';
-            context.textAlign = 'center';
-            context.fillText('GAME OVER', 300, 450);
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // пауза
-        // --------------------------------------------------------------------------------
-
-        function drawPause()
-        {
-            if (pause)
+            if (gameOverTimeout === false)
             {
+                changeAudioSrc(GameOverAudio);
+
                 context.font = '40pt Calibri';
                 context.fillStyle = 'red';
                 context.textAlign = 'center';
-                context.fillText('PAUSE', 300, 450);
+                context.fillText('GAME OVER', 300, 450);
             }
         }
 
-
-        // --------------------------------------------------------------------------------
-        // полоса жизни
-        // --------------------------------------------------------------------------------
-
-
-        function drawLife()
+        function drawPause()
         {
-            let blueRGB = Math.floor(playership.life / 2);
-
-            function redRGB()
+            if (gameState !== 'gameOver')
             {
-                if (blueRGB > 200)
-                    return 0;
-                else if (blueRGB > 150)
-                    return 50;
-                else if (blueRGB > 100)
-                    return 150;
-                else if (blueRGB > 50)
-                    return 200;
-                else
-                    return 250;
-
-            }
-
-            context.fillStyle = 'rgba(' + redRGB() + ',50,' + blueRGB + ',0.7)';
-            context.fillRect(10, 80, playership.life / 2, 30);
-            context.fillStyle = 'black';
-            context.lineWidth = 4;
-            context.strokeRect(10, 80, 250, 30);
-            context.font = 'italic 18pt Calibri';
-            context.textAlign = 'left';
-            context.fillStyle = '#C8C8FF';
-            context.fillText(('Shield'), 22, 102);
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // щит
-        // --------------------------------------------------------------------------------
-
-
-        function recoveryShield(hp)
-        {
-            if (playership.life < 499)
-            {
-                playership.life += hp;
+                if (pause)
+                {
+                    context.font = '40pt Calibri';
+                    context.fillStyle = 'red';
+                    context.textAlign = 'center';
+                    context.fillText('PAUSE', 300, 450);
+                }
             }
         }
 
 
-        // --------------------------------------------------------------------------------
-        // счет
-        // --------------------------------------------------------------------------------
-
+// --------------------------------------------------------------------------------
+// индикаторы
+// --------------------------------------------------------------------------------
 
         let score = 0;
 
@@ -888,60 +1186,102 @@ window.addEventListener('load',
             context.fillText('Score: ' + Math.ceil(score), 20, 70);
         }
 
-
-        // --------------------------------------------------------------------------------
-        // задержка старта астероидов
-        // --------------------------------------------------------------------------------
-
-
-        let start = true;
-
-        function timeoutStartAsteroid()
+        function drawLife()
         {
-            if (!level1 && start)
+            if (gameState !== 'gameOver')
             {
-                start = false;
-                addAsteroids(5);
+                for (let i = 0; i < ships.length; i++)
+                {
+                    let ship = ships[i];
+
+                    let blueRGB = Math.floor(ship.life / 2);
+
+                    function redRGB()
+                    {
+                        if (blueRGB > 200)
+                            return 0;
+                        else if (blueRGB > 150)
+                            return 50;
+                        else if (blueRGB > 100)
+                            return 150;
+                        else if (blueRGB > 50)
+                            return 200;
+                        else
+                            return 250;
+                    }
+
+                    context.fillStyle = 'rgba(' + redRGB() + ',50,' + blueRGB + ',0.7)';
+                    context.fillRect(10, (80 + 40 * i), ship.life / 2, 30);
+                    context.fillStyle = 'black';
+                    context.lineWidth = 4;
+                    context.strokeRect(10, (80 + 40 * i), 250, 30);
+                    context.font = 'italic 18pt Calibri';
+                    context.textAlign = 'left';
+                    context.fillStyle = '#C8C8FF';
+                    context.fillText(('Shield'), 22, (102 + 40 * i));
+                }
+            }
+        }
+
+        function recoveryShield()
+        {
+            if (gameState !== 'gameOver')
+            {
+                    for (let i = 0; i < ships.length; i++)
+                    {
+                        let ship = ships[i];
+                        if (ship.life < 499)
+                        {
+                            ship.life += ship.recoveryShieldHPerTick;
+                        }
+                    }
             }
         }
 
 
-        // --------------------------------------------------------------------------------
-        // утилиты
-        // --------------------------------------------------------------------------------
-
+// --------------------------------------------------------------------------------
+// утилиты
+// --------------------------------------------------------------------------------
 
         function getRandomFloat(min, max)
         {
             return Math.random() * (max - min) + min;
         }
 
-
         function getFrameNumberByAnimationTime(animationTime, totalTime, framesAmount)
         {
             if (animationTime < 0)
-                animationTime = 0;
+                animationTime = 1;
             else if (animationTime > totalTime)
                 animationTime = totalTime;
 
-            let normalizedTime = animationTime / totalTime; // animationTime in 0..1
-
-            let currentFrame = Math.floor(normalizedTime * (framesAmount + 1));
-            if (currentFrame > (framesAmount - 1))
-                currentFrame = (framesAmount - 1);
+            let currentFrame = Math.ceil(animationTime / totalTime * framesAmount);
+            if (currentFrame > framesAmount)
+                currentFrame = framesAmount;
 
             return currentFrame;
         }
 
+        let tickTime = 0;
+        let lastTime = null;
 
-        // --------------------------------------------------------------------------------
-        // управление кораблем и выстрелами
-        // --------------------------------------------------------------------------------
+        function curTickTime()
+        {
+            let currentTime = (new Date).getTime();
+            if (lastTime === null)
+                lastTime = currentTime;
+
+            tickTime = currentTime - lastTime;
+            lastTime = currentTime;
+        }
 
 
-        let horisontalMovement = 0;
+// --------------------------------------------------------------------------------
+// управление кораблем и выстрелами
+// --------------------------------------------------------------------------------
+
+
         let shotIntervalId = -1;
-        let pause = false;
 
         function startFiring()
         {
@@ -984,8 +1324,6 @@ window.addEventListener('load',
                     // пробел
                     case 32:
                         stopFiring();
-                        // checkInterval = true;
-                        // clearTimeout(timerId);
                         break;
                     // стрелка влево
                     case 37:
@@ -1012,19 +1350,6 @@ window.addEventListener('load',
                     // пробел
                     case 32:
                         startFiring();
-                        // let shot = new curShell();
-                        // if (checkInterval && !pause)
-                        // {
-                        //     addShot();
-                        //     timerId = setInterval(addShot, shot.timeoutFiringRate);
-                        //     checkInterval = false;
-                        // }
-                        // if (shot.numberShell !== lastNumberShell)
-                        // {
-                        //     checkInterval = true;
-                        //     clearTimeout(timerId);
-                        //     lastNumberShell = shot.numberShell;
-                        // }
                         break;
                     // стрелка влево
                     case 37:
@@ -1036,75 +1361,50 @@ window.addEventListener('load',
                         break;
                     // пауза
                     case 80:
-                        (!pause) ? pause = true : pause = false;
-                        // if (!pause)
-                        //     pause = true;
-                        // else
-                        //     pause = false;
+                        (pause) ? pause = false : pause = true;
                         break;
                 }
             });
 
 
-        // --------------------------------------------------------------------------------
-        // основной цикл
-        // --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
+// основной цикл
+// --------------------------------------------------------------------------------
 
-
-        let lastTime = -1;
-
+        // предельное количество элементов, задается от уровня
         let maxAsteroidsInLevel = 500;
 
         function tick()
         {
-            let currentTime = (new Date).getTime();
-            if (lastTime === -1)
-                lastTime = currentTime;
-
-            let tickTime = currentTime - lastTime;
-            lastTime = currentTime;
-
+            curTickTime();
             if (!pause)
             {
-                moveAsteroids(tickTime);
-                moveSplinter(tickTime);
-                movePlayership(tickTime);
-                moveShots(tickTime);
+                moveAsteroids();
+                moveShips();
+                moveShots();
                 moveExplosions(tickTime);
-                moveBackground(tickTime);
+                moveBackground();
+                gameEngine();
+                recoveryShield();
             }
-
-            timeoutStartAsteroid();
-
-            checkPlayershipAndAsteroidsCollisions();
-            checkPlayershipAndSplintersCollisions();
-            checkShellsAndAsteroidsCollisions();
-            checkShellsAndSplintersCollisions();
+            premissionTimeout();
+            gameOverTimeout();
 
             drawBackground();
             drawAsteroids();
-            drawSplinter();
             drawExplosions();
-
-            drawScore();
-            drawLevel1();
-            drawEndLevel();
+            drawGameOver();
             drawPause();
-
-            if (!isGameOver)
-            {
-                drawShots();
-                drawPlayership();
-                drawLife();
-
-                recoveryShield(0.03);
-            }
-            else
-            {
-                drawGameOver();
-            }
-
-            // requestAnimationFrame(tick);
+            drawShots();
+            drawShips();
+            drawLife();
+            drawScore();
+            drawPremission(1, 'the spacecraft enters the asteroid field');
+            drawPostmission(1, 'the asteroid field is successfully completed');
+            // checkPlayershipAndAsteroidsCollisions();
+            // checkPlayershipAndSplintersCollisions();
+            // checkShellsAndAsteroidsCollisions();
+            // checkShellsAndSplintersCollisions();
         }
 
 
@@ -1112,10 +1412,10 @@ window.addEventListener('load',
         // инициализация
         // --------------------------------------------------------------------------------
 
-
-        addPlayership();
-        initAudio(audioSrc.level1);
-        intervalAddAsteroid(1, 10000);
+        addShip(Playership1);
+        addAudio(Level1Audio);
+        addBackground(Background1);
+        intervalAddAsteroid(1, Asteroid1, 10000);
         setInterval(tick, 1000 / 60);
         tick();
     }
