@@ -63,7 +63,6 @@ window.addEventListener('load', function ()
         BackgroundAudio.prototype.id = 'backgroundMusic';
         BackgroundAudio.prototype.loop = 'loop';
 
-
         // главный экран
         function HomeScreenAudio()
         {
@@ -89,12 +88,75 @@ window.addEventListener('load', function ()
         GameOverAudio.prototype = new BackgroundAudio();
         GameOverAudio.prototype.src = "music/Game_Over.mp3";
 
+        function ShotAudio()
+        {
+        }
+
+        ShotAudio.prototype = new AbstractAudio();
+        ShotAudio.prototype.id = 'ShotAudio';
+
+        function PulseLaserAudio()
+        {
+        }
+
+        PulseLaserAudio.prototype = new ShotAudio();
+        PulseLaserAudio.prototype.src = "music/shotsAudio/PulseLaser.mp3";
+
+        function MiniPowerLaserAudio()
+        {
+        }
+
+        MiniPowerLaserAudio.prototype = new ShotAudio();
+        MiniPowerLaserAudio.prototype.src = "music/shotsAudio/PulseLaser5.mp3";
+
+        function GreenLaserAudio()
+        {
+        }
+
+        GreenLaserAudio.prototype = new ShotAudio();
+        GreenLaserAudio.prototype.src = "music/shotsAudio/GreenLaser.mp3";
+
+        function BlueLaserAudio()
+        {
+        }
+
+        BlueLaserAudio.prototype = new ShotAudio();
+        BlueLaserAudio.prototype.src = "music/shotsAudio/BlueLaser.mp3";
+
+        function RapidCannonAudio()
+        {
+        }
+
+        RapidCannonAudio.prototype = new ShotAudio();
+        RapidCannonAudio.prototype.src = "music/shotsAudio/PulseLaser6.mp3";
+
+        function PowerLaserAudio()
+        {
+        }
+
+        PowerLaserAudio.prototype = new ShotAudio();
+        PowerLaserAudio.prototype.src = "music/shotsAudio/PowerLaser.mp3";
+
+        function MiniPhotonGunAudio()
+        {
+        }
+
+        MiniPhotonGunAudio.prototype = new ShotAudio();
+        MiniPhotonGunAudio.prototype.src = "music/shotsAudio/MiniPhotonGun.mp3";
+
+        function RocketAudio()
+        {
+        }
+
+        RocketAudio.prototype = new ShotAudio();
+        RocketAudio.prototype.src = "music/shotsAudio/Rocket.mp3";
+
 
         // --------------------------------------------------------------------------------
         // звук
         // --------------------------------------------------------------------------------
 
-        function addAudio(typeAudio)
+        function addBackgroundAudio(typeAudio)
         {
             let curAudio = new typeAudio();
             let audio = document.createElement('audio');
@@ -103,16 +165,46 @@ window.addEventListener('load', function ()
             audio.setAttribute('autoplay', curAudio.autoplay);
             audio.setAttribute('loop', curAudio.loop);
             document.body.appendChild(audio);
-            console.log(curAudio);
         }
 
-        function changeAudioSrc(typeAudio)
+        function addShotAudio(typeAudio)
+        {
+            let curAudio = new typeAudio();
+            let audio = document.createElement('audio');
+            audio.setAttribute('id', curAudio.id);
+            audio.setAttribute('src', curAudio.src);
+            document.body.appendChild(audio);
+        }
+
+        function changeCurAudio(typeAudio)
         {
             let curAudio = new typeAudio();
             let audio = document.getElementById(curAudio.id);
-            audio.setAttribute('src', curAudio.src);
-            console.log(curAudio);
-            console.log(audio);
+            if (curAudio.id === 'backgroundMusic')
+                audio.setAttribute('src', curAudio.src);
+            if (curAudio.id === 'ShotAudio')
+                audio.setAttribute('src', curAudio.src);
+            audio.setAttribute('autoplay', 'autoplay');
+        }
+
+        function checkCurAudio()
+        {
+            if (curShell === PulseLaser)
+                changeCurAudio(PulseLaserAudio);
+            if (curShell === MiniPowerLaser)
+                changeCurAudio(MiniPowerLaserAudio);
+            if (curShell === GreenLaser)
+                changeCurAudio(GreenLaserAudio);
+            if (curShell === BlueLaser)
+                changeCurAudio(BlueLaserAudio);
+            if (curShell === RapidCannon)
+                changeCurAudio(RapidCannonAudio);
+            if (curShell === PowerLaser)
+                changeCurAudio(PowerLaserAudio);
+            if (curShell === MiniPhotonGun)
+                changeCurAudio(MiniPhotonGunAudio);
+            if (curShell === Rocket)
+                changeCurAudio(RocketAudio);
         }
 
 
@@ -174,14 +266,14 @@ window.addEventListener('load', function ()
 
         function drawBackground()
         {
-                let curBackground = backgrounds[0];
-                curBackground.draw();
+            let curBackground = backgrounds[0];
+            curBackground.draw();
         }
 
         function moveBackground()
         {
-                let curBackground = backgrounds[0];
-                curBackground.move();
+            let curBackground = backgrounds[0];
+            curBackground.move();
         }
 
 
@@ -534,7 +626,7 @@ window.addEventListener('load', function ()
 
         AbstractShell.prototype.draw = function ()
         {
-            context.drawImage(this.image, this.x - this.image.width / 2, this.y/* - this.image.height / 2*/);
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
         };
         AbstractShell.prototype.move = function ()
         {
@@ -551,22 +643,19 @@ window.addEventListener('load', function ()
 
         PulseLaser.prototype = new AbstractShell;
 
-
-        // мощный лазер (оружие 2)
-        function PowerLaser()
+        function MiniPowerLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
-            console.log('PowerLaser: ' + this.hpPerSec + ' hpPerSec');
+            console.log('MiniPowerLaser: ' + this.hpPerSec + ' hpPerSec');
         }
 
-        PowerLaser.prototype = new AbstractShell;
-        PowerLaser.prototype.dy = 8;
-        PowerLaser.prototype.offsetStartY = 10;
-        PowerLaser.prototype.timeoutFiringRate = 175;
-        PowerLaser.prototype.power = 23;
-        PowerLaser.prototype.image = images.shell2;
+        MiniPowerLaser.prototype = new AbstractShell;
+        MiniPowerLaser.prototype.dy = 18;
+        MiniPowerLaser.prototype.timeoutFiringRate = 120;
+        MiniPowerLaser.prototype.power = 15;
+        MiniPowerLaser.prototype.image = images.shell2;
 
-        // 2ой лазер (оружие 3)
+        // 2ой лазер (оружие 2)
         function GreenLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -575,12 +664,11 @@ window.addEventListener('load', function ()
 
         GreenLaser.prototype = new AbstractShell;
         GreenLaser.prototype.dy = 15;
-        GreenLaser.prototype.offsetStartY = 10;
-        GreenLaser.prototype.timeoutFiringRate = 150;
-        GreenLaser.prototype.power = 25;
+        GreenLaser.prototype.timeoutFiringRate = 130;
+        GreenLaser.prototype.power = 20;
         GreenLaser.prototype.image = images.shell3;
 
-        // 3ой лазер (оружие 4)
+        // 3ой лазер (оружие 3)
         function BlueLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -588,11 +676,45 @@ window.addEventListener('load', function ()
         }
 
         BlueLaser.prototype = new AbstractShell;
-        BlueLaser.prototype.dy = 12;
-        BlueLaser.prototype.offsetStartY = 10;
-        BlueLaser.prototype.timeoutFiringRate = 175;
-        BlueLaser.prototype.power = 35;
+        BlueLaser.prototype.dy = 20;
+        BlueLaser.prototype.timeoutFiringRate = 160;
+        BlueLaser.prototype.power = 30;
         BlueLaser.prototype.image = images.shell4;
+
+        function RapidCannon()
+        {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('RapidCannon: ' + this.hpPerSec + ' hpPerSec');
+        }
+
+        RapidCannon.prototype = new AbstractShell;
+        RapidCannon.prototype.dy = 25;
+        RapidCannon.prototype.timeoutFiringRate = 120;
+        RapidCannon.prototype.power = 27;
+        RapidCannon.prototype.image = images.shell2;
+
+        RapidCannon.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - 21, this.y - 5, 40, 20);
+        };
+
+        // мощный лазер (оружие 4)
+        function PowerLaser()
+        {
+            this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
+            console.log('PowerLaser: ' + this.hpPerSec + ' hpPerSec');
+        }
+
+        PowerLaser.prototype = new AbstractShell;
+        PowerLaser.prototype.dy = 20;
+        PowerLaser.prototype.timeoutFiringRate = 380;
+        PowerLaser.prototype.power = 100;
+        PowerLaser.prototype.image = images.shell2;
+
+        PowerLaser.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - 21, this.y - 20, 40, 80);
+        };
 
         // мини фотонная пушка (оружие 5)
         function MiniPhotonGun()
@@ -603,10 +725,15 @@ window.addEventListener('load', function ()
 
         MiniPhotonGun.prototype = new AbstractShell;
         MiniPhotonGun.prototype.dy = 25;
-        MiniPhotonGun.prototype.offsetStartY = 50;
-        MiniPhotonGun.prototype.timeoutFiringRate = 400;
-        MiniPhotonGun.prototype.power = 100;
+        MiniPhotonGun.prototype.offsetStartY = 35;
+        MiniPhotonGun.prototype.timeoutFiringRate = 500;
+        MiniPhotonGun.prototype.power = 140;
         MiniPhotonGun.prototype.image = images.shell5;
+
+        MiniPhotonGun.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - 21, this.y - 20);
+        };
 
 
         // ракета (оружие 6)
@@ -618,10 +745,11 @@ window.addEventListener('load', function ()
 
         Rocket.prototype = new AbstractShell;
         Rocket.prototype.dy = 5;
-        Rocket.prototype.offsetStartY = 25;
+        Rocket.prototype.offsetStartY = 5;
         Rocket.prototype.timeoutFiringRate = 500;
-        Rocket.prototype.power = 150;
+        Rocket.prototype.power = 180;
         Rocket.prototype.image = images.rocket1;
+
 
         // мега фотонная пушка (оружие7)
 
@@ -648,27 +776,37 @@ window.addEventListener('load', function ()
 
         function checkCurShell()
         {
-            if (score >= 40 && score < 100)
-                changeCurShellTo(PowerLaser);
-            else if (score >= 100 && score < 300)
+            if (score < 400)
+                curShell = PulseLaser;
+            else if (score >= 400 && score < 1000)
+                changeCurShellTo(MiniPowerLaser);
+            else if (score >= 1000 && score < 1500)
                 changeCurShellTo(GreenLaser);
-            else if (score >= 300 && score < 400)
+            else if (score >= 1500 && score < 2000)
                 changeCurShellTo(BlueLaser);
-            else if (score >= 400 && score < 800)
+            else if (score >= 2000 && score < 2500)
+                changeCurShellTo(RapidCannon);
+            else if (score >= 2500 && score < 3000)
+                changeCurShellTo(PowerLaser);
+            else if (score >= 3000 && score < 3500)
                 changeCurShellTo(MiniPhotonGun);
-            else if (score >= 800)
+            else if (score >= 3500)
                 changeCurShellTo(Rocket);
             // if (score < 400)
             //     curShell = PulseLaser;
             // else if (score >= 400 && score < 1000)
-            //     changeCurShellTo(PowerLaser);
-            // else if (score >= 1000 && score < 1500)
+            //     changeCurShellTo(MiniPowerLaser);
+            // else if (score >= 1000 && score < 2000)
             //     changeCurShellTo(GreenLaser);
-            // else if (score >= 1500 && score < 2000)
-            //     changeCurShellTo(BlueLaser);
             // else if (score >= 2000 && score < 3000)
+            //     changeCurShellTo(BlueLaser);
+            // else if (score >= 3000 && score < 4000)
+            //     changeCurShellTo(RapidCannon);
+            // else if (score >= 4000 && score < 5000)
+            //     changeCurShellTo(PowerLaser);
+            // else if (score >= 5000 && score < 6000)
             //     changeCurShellTo(MiniPhotonGun);
-            // else if (score >= 3000)
+            // else if (score >= 6000)
             //     changeCurShellTo(Rocket);
         }
 
@@ -690,6 +828,8 @@ window.addEventListener('load', function ()
             shot.x = ship.x;
             shot.y = ship.y - shot.offsetStartY;
             shots.push(shot);
+
+            checkCurAudio();
         }
 
         function drawShots()
@@ -1006,13 +1146,13 @@ window.addEventListener('load', function ()
                     let dy = asteroid.y - ship.y;
                     let distanse = Math.sqrt(dx * dx + dy * dy);
 
-                    let distanseRatio;
+                    let distanseAsteroidRatio;
                     if (asteroid.type === 'asteroid')
-                        distanseRatio = 0.9;
+                        distanseAsteroidRatio = 0.9;
                     if (asteroid.type === 'splinter')
-                        distanseRatio = 1;
+                        distanseAsteroidRatio = 1;
 
-                    let colissionDistanse = (asteroid.size / 2 + ship.size / 2) * distanseRatio;
+                    let colissionDistanse = (asteroid.size / 2 + ship.size / 2) * distanseAsteroidRatio;
 
                     if (distanse <= colissionDistanse)
                     {
@@ -1043,13 +1183,31 @@ window.addEventListener('load', function ()
                     let dy = asteroid.y - shot.y;
                     let distanse = Math.sqrt(dx * dx + dy * dy);
 
-                    let distanseRatio;
+                    let distanseAsteroidRatio;
                     if (asteroid.type === 'asteroid')
-                        distanseRatio = 0.8;
-                    if (asteroid.type === 'splinter')
-                        distanseRatio = 0.8;
+                        distanseAsteroidRatio = 0.85;
+                    else if (asteroid.type === 'splinter')
+                        distanseAsteroidRatio = 0.99;
+                    else
+                        distanseAsteroidRatio = 1;
 
-                    let colissionDistanse = (asteroid.size / 2) * distanseRatio;
+                    let distanseShellRatio;
+                    if (curShell === Rocket)
+                        distanseShellRatio = 1.5;
+                    else if (curShell === MiniPhotonGun)
+                        distanseShellRatio = 1.2;
+                    else if (curShell === RapidCannon)
+                        distanseShellRatio = 1.1;
+                    else if (curShell === BlueLaser)
+                        distanseShellRatio = 1.1;
+                    else if (curShell === GreenLaser)
+                        distanseShellRatio = 1.05;
+                    else if (curShell === PowerLaser)
+                        distanseShellRatio = 1.05;
+                    else
+                        distanseShellRatio = 1;
+
+                    let colissionDistanse = (asteroid.size / 2) * distanseAsteroidRatio * distanseShellRatio;
                     if (distanse <= colissionDistanse)
                     {
                         asteroid.life -= shot.power;
@@ -1060,7 +1218,14 @@ window.addEventListener('load', function ()
                             {
                                 addAsteroidAfterKill(1, Asteroid1);
                                 // addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
-                                // addAsteroidAfterKill(3/*(Math.floor(asteroid.size / 30)) * 2*/, Splinter);
+                                // addAsteroidAfterKill(3/*(Math.floor(asteroid.size / 30)) * 2*/, Splinter(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
+                                let size = asteroid.size;
+                                let x = asteroid.x;
+                                let y = asteroid.y;
+                                let dx = asteroid.dx;
+                                let dy = asteroid.dy;
+                                // addAsteroids(3, Splinter(size, x, y, dx, dy));
+                                // addAsteroids(3, Splinter(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
                             }
                             if (asteroid.type === 'splinter')
                             {
@@ -1121,7 +1286,7 @@ window.addEventListener('load', function ()
             {
                 setTimeout(function ()
                 {
-                    changeAudioSrc(GameOverAudio);
+                    changeCurAudio(GameOverAudio);
                     gameOverTime = false;
                 }, 500);
             }
@@ -1166,15 +1331,12 @@ window.addEventListener('load', function ()
 
         function drawPause()
         {
-            if (gameState !== 'gameOver')
+            if (gameState !== 'gameOver' && pause)
             {
-                if (pause)
-                {
-                    context.font = '40pt Calibri';
-                    context.fillStyle = 'red';
-                    context.textAlign = 'center';
-                    context.fillText('PAUSE', 300, 450);
-                }
+                context.font = '40pt Calibri';
+                context.fillStyle = 'red';
+                context.textAlign = 'center';
+                context.fillText('PAUSE', 300, 450);
             }
         }
 
@@ -1208,21 +1370,20 @@ window.addEventListener('load', function ()
 
                     let blueRGB = Math.floor(ship.life / 2);
 
-                    function redRGB()
-                    {
-                        if (blueRGB > 200)
-                            return 0;
-                        else if (blueRGB > 150)
-                            return 50;
-                        else if (blueRGB > 100)
-                            return 150;
-                        else if (blueRGB > 50)
-                            return 200;
-                        else
-                            return 250;
-                    }
+                    let redRGB;
 
-                    context.fillStyle = 'rgba(' + redRGB() + ',50,' + blueRGB + ',0.7)';
+                    if (blueRGB > 200)
+                        redRGB = 0;
+                    else if (blueRGB > 150)
+                        redRGB = 50;
+                    else if (blueRGB > 100)
+                        redRGB = 150;
+                    else if (blueRGB > 50)
+                        redRGB = 200;
+                    else
+                        redRGB = 250;
+
+                    context.fillStyle = 'rgba(' + redRGB + ',50,' + blueRGB + ',0.7)';
                     context.fillRect(10, (80 + 40 * i), ship.life / 2, 30);
                     context.fillStyle = 'black';
                     context.lineWidth = 4;
@@ -1239,14 +1400,14 @@ window.addEventListener('load', function ()
         {
             if (gameState !== 'gameOver')
             {
-                    for (let i = 0; i < ships.length; i++)
+                for (let i = 0; i < ships.length; i++)
+                {
+                    let ship = ships[i];
+                    if (ship.life < 499)
                     {
-                        let ship = ships[i];
-                        if (ship.life < 499)
-                        {
-                            ship.life += ship.recoveryShieldHPerTick;
-                        }
+                        ship.life += ship.recoveryShieldHPerTick;
                     }
+                }
             }
         }
 
@@ -1294,13 +1455,23 @@ window.addEventListener('load', function ()
 
 
         let shotIntervalId = -1;
+        let firingTimeout = true;
 
         function startFiring()
         {
-            if (shotIntervalId === -1)
+            if (gameState !== 'gameOver' && !pause)
             {
-                addShot();
-                shotIntervalId = setInterval(addShot, curShell.prototype.timeoutFiringRate);
+                if (shotIntervalId === -1 && firingTimeout)
+                {
+                    addShot();
+                    shotIntervalId = setInterval(addShot, curShell.prototype.timeoutFiringRate);
+
+                    firingTimeout = false;
+                    setTimeout(function ()
+                    {
+                        firingTimeout = true;
+                    }, 400);
+                }
             }
         }
 
@@ -1321,7 +1492,6 @@ window.addEventListener('load', function ()
                 shotIntervalId = setInterval(addShot, curShell.prototype.timeoutFiringRate);
             }
         }
-
 
         window.addEventListener('keyup',
             function (e)
@@ -1384,7 +1554,7 @@ window.addEventListener('load', function ()
 // --------------------------------------------------------------------------------
 
         // предельное количество элементов, задается от уровня
-        let maxAsteroidsInLevel = 500;
+        let maxAsteroidsInLevel = 800;
 
         function tick()
         {
@@ -1425,7 +1595,8 @@ window.addEventListener('load', function ()
         // --------------------------------------------------------------------------------
 
         addShip(Playership1);
-        addAudio(Level1Audio);
+        addBackgroundAudio(Level1Audio);
+        addShotAudio(PulseLaserAudio);
         addBackground(Background1);
         intervalAddAsteroid(1, Asteroid1, 10000);
         setInterval(tick, 1000 / 60);
