@@ -46,166 +46,241 @@ window.addEventListener('load', function ()
 // набор звук
 // --------------------------------------------------------------------------------
 
-        function AbstractAudio()
-        {
-        }
-
-        AbstractAudio.prototype.id = '';
-        AbstractAudio.prototype.src = '';
-        AbstractAudio.prototype.autoplay = 'autoplay';
-        AbstractAudio.prototype.loop = '';
-
-        function BackgroundAudio()
-        {
-        }
-
-        BackgroundAudio.prototype = new AbstractAudio();
-        BackgroundAudio.prototype.id = 'backgroundMusic';
-        BackgroundAudio.prototype.loop = 'loop';
-
-        // главный экран
-        function HomeScreenAudio()
-        {
-        }
-
-        HomeScreenAudio.prototype = new BackgroundAudio();
-        HomeScreenAudio.prototype.src = "music/home_screen2.mp3";
-
-        // игра вариант 1
-        function Level1Audio()
-        {
-        }
-
-        Level1Audio.prototype = new BackgroundAudio();
-        Level1Audio.prototype.src = "music/level.mp3";
-
-
-        // game over
-        function GameOverAudio()
-        {
-        }
-
-        GameOverAudio.prototype = new BackgroundAudio();
-        GameOverAudio.prototype.src = "music/Game_Over.mp3";
-
-        function ShotAudio()
-        {
-        }
-
-        ShotAudio.prototype = new AbstractAudio();
-        ShotAudio.prototype.id = 'ShotAudio';
-
-        function PulseLaserAudio()
-        {
-        }
-
-        PulseLaserAudio.prototype = new ShotAudio();
-        PulseLaserAudio.prototype.src = "music/shotsAudio/PulseLaser.mp3";
-
-        function MiniPowerLaserAudio()
-        {
-        }
-
-        MiniPowerLaserAudio.prototype = new ShotAudio();
-        MiniPowerLaserAudio.prototype.src = "music/shotsAudio/PulseLaser5.mp3";
-
-        function GreenLaserAudio()
-        {
-        }
-
-        GreenLaserAudio.prototype = new ShotAudio();
-        GreenLaserAudio.prototype.src = "music/shotsAudio/GreenLaser.mp3";
-
-        function BlueLaserAudio()
-        {
-        }
-
-        BlueLaserAudio.prototype = new ShotAudio();
-        BlueLaserAudio.prototype.src = "music/shotsAudio/BlueLaser.mp3";
-
-        function RapidCannonAudio()
-        {
-        }
-
-        RapidCannonAudio.prototype = new ShotAudio();
-        RapidCannonAudio.prototype.src = "music/shotsAudio/PulseLaser6.mp3";
-
-        function PowerLaserAudio()
-        {
-        }
-
-        PowerLaserAudio.prototype = new ShotAudio();
-        PowerLaserAudio.prototype.src = "music/shotsAudio/PowerLaser.mp3";
-
-        function MiniPhotonGunAudio()
-        {
-        }
-
-        MiniPhotonGunAudio.prototype = new ShotAudio();
-        MiniPhotonGunAudio.prototype.src = "music/shotsAudio/MiniPhotonGun.mp3";
-
-        function RocketAudio()
-        {
-        }
-
-        RocketAudio.prototype = new ShotAudio();
-        RocketAudio.prototype.src = "music/shotsAudio/Rocket.mp3";
+        // function AbstractAudio()
+        // {
+        // }
+        //
+        // AbstractAudio.prototype.id = '';
+        // AbstractAudio.prototype.src = '';
+        // AbstractAudio.prototype.autoplay = 'autoplay';
+        // AbstractAudio.prototype.loop = '';
+        // function BackgroundAudio()
+        // {
+        // }
+        //
+        // BackgroundAudio.prototype = new AbstractAudio();
+        // BackgroundAudio.prototype.id = 'backgroundMusic';
+        // BackgroundAudio.prototype.loop = 'loop';
+        //
+        // // главный экран
+        // function HomeScreenAudio()
+        // {
+        // }
+        //
+        // HomeScreenAudio.prototype = new BackgroundAudio();
+        // HomeScreenAudio.prototype.src = "music/home_screen2.mp3";
+        //
+        // // игра вариант 1
+        // function Level1Audio()
+        // {
+        // }
+        //
+        // Level1Audio.prototype = new BackgroundAudio();
+        // Level1Audio.prototype.src = "music/level.mp3";
+        //
+        //
+        // // game over
+        // function GameOverAudio()
+        // {
+        // }
+        //
+        // GameOverAudio.prototype = new BackgroundAudio();
+        // GameOverAudio.prototype.src = "music/Game_Over.mp3";
+        //
+        // function ShotAudio()
+        // {
+        // }
+        //
+        // ShotAudio.prototype = new AbstractAudio();
+        // ShotAudio.prototype.id = 'ShotAudio';
+        //
+        // function PulseLaserAudio()
+        // {
+        // }
+        //
+        // PulseLaserAudio.prototype = new ShotAudio();
+        // PulseLaserAudio.prototype.src = "music/shotsAudio/PulseLaser.mp3";
+        //
+        // function MiniPowerLaserAudio()
+        // {
+        // }
+        //
+        // MiniPowerLaserAudio.prototype = new ShotAudio();
+        // MiniPowerLaserAudio.prototype.src = "music/shotsAudio/PulseLaser5.mp3";
+        //
+        // function GreenLaserAudio()
+        // {
+        // }
+        //
+        // GreenLaserAudio.prototype = new ShotAudio();
+        // GreenLaserAudio.prototype.src = "music/shotsAudio/GreenLaser.mp3";
+        //
+        // function BlueLaserAudio()
+        // {
+        // }
+        //
+        // BlueLaserAudio.prototype = new ShotAudio();
+        // BlueLaserAudio.prototype.src = "music/shotsAudio/BlueLaser.mp3";
+        //
+        // function RapidCannonAudio()
+        // {
+        // }
+        //
+        // RapidCannonAudio.prototype = new ShotAudio();
+        // RapidCannonAudio.prototype.src = "music/shotsAudio/PulseLaser6.mp3";
+        //
+        // function PowerLaserAudio()
+        // {
+        // }
+        //
+        // PowerLaserAudio.prototype = new ShotAudio();
+        // PowerLaserAudio.prototype.src = "music/shotsAudio/PowerLaser.mp3";
+        //
+        // function MiniPhotonGunAudio()
+        // {
+        // }
+        //
+        // MiniPhotonGunAudio.prototype = new ShotAudio();
+        // MiniPhotonGunAudio.prototype.src = "music/shotsAudio/MiniPhotonGun.mp3";
+        //
+        // function RocketAudio()
+        // {
+        // }
+        //
+        // RocketAudio.prototype = new ShotAudio();
+        // RocketAudio.prototype.src = "music/shotsAudio/Rocket.mp3";
 
 
         // --------------------------------------------------------------------------------
         // звук
         // --------------------------------------------------------------------------------
 
-        function addBackgroundAudio(typeAudio)
+        let channels = {};
+
+        function Sound(src, channelId)
         {
-            let curAudio = new typeAudio();
-            let audio = document.createElement('audio');
-            audio.setAttribute('id', curAudio.id);
-            audio.setAttribute('src', curAudio.src);
-            audio.setAttribute('autoplay', curAudio.autoplay);
-            audio.setAttribute('loop', curAudio.loop);
-            document.body.appendChild(audio);
+            this.channel = channelId;
+            this.src = src;
         }
 
-        function addShotAudio(typeAudio)
+        Sound.prototype.channel = '';
+        Sound.prototype.src = '';
+        Sound.prototype.autoplay = 'autoplay';
+        Sound.prototype.loop = 'loop';
+        Sound.prototype.play = function ()
         {
-            let curAudio = new typeAudio();
-            let audio = document.createElement('audio');
-            audio.setAttribute('id', curAudio.id);
-            audio.setAttribute('src', curAudio.src);
-            document.body.appendChild(audio);
+            if (!channels['backgroundMusic'] && this.channel === 'backgroundMusic')
+            {
+                channels.backgroundMusic = 'backgroundMusic';
+
+                let audio = document.createElement('audio');
+                audio.setAttribute('id', this.channel);
+                audio.setAttribute('src', this.src);
+                audio.setAttribute('autoplay', this.autoplay);
+                audio.setAttribute('loop', this.loop);
+                document.body.appendChild(audio);
+            }
+            if (!channels['shotAudio'] && this.channel === 'shotAudio')
+            {
+                channels.shotAudio = 'shotAudio';
+
+                let audio = document.createElement('audio');
+                audio.setAttribute('id', this.channel);
+                audio.setAttribute('src', this.src);
+                audio.setAttribute('autoplay', this.autoplay);
+                document.body.appendChild(audio);
+            }
+
+            let audio = document.getElementById(this.channel);
+
+            audio.setAttribute('src', this.src);
+
+            // audio.setAttribute('autoplay', 'autoplay');
+            //
+            // if (this.channel === 'backgroundMusic')
+            //     audio.setAttribute('loop', this.loop);
+        };
+
+
+        function SoundManager()
+        {
+            this.sounds = {};
+            // this.channels = {};
         }
 
-        function changeCurAudio(typeAudio)
-        {
-            let curAudio = new typeAudio();
-            let audio = document.getElementById(curAudio.id);
-            if (curAudio.id === 'backgroundMusic')
-                audio.setAttribute('src', curAudio.src);
-            if (curAudio.id === 'ShotAudio')
-                audio.setAttribute('src', curAudio.src);
-            audio.setAttribute('autoplay', 'autoplay');
-        }
+        SoundManager.instance = new SoundManager;
+        SoundManager.instance.sounds.homeScreen = new Sound("music/home_screen2.mp3", 'backgroundMusic');
+        SoundManager.instance.sounds.level1 = new Sound("music/level.mp3", 'backgroundMusic');
+        SoundManager.instance.sounds.gameOver = new Sound("music/Game_Over.mp3", 'backgroundMusic');
+        SoundManager.instance.sounds.pulseLaser = new Sound("music/shotsAudio/PulseLaser.mp3", 'shotAudio');
+        SoundManager.instance.sounds.miniPowerLaser = new Sound("music/shotsAudio/PulseLaser5.mp3", 'shotAudio');
+        SoundManager.instance.sounds.greenLaser = new Sound("music/shotsAudio/GreenLaser.mp3", 'shotAudio');
+        SoundManager.instance.sounds.blueLaser = new Sound("music/shotsAudio/BlueLaser.mp3", 'shotAudio');
+        SoundManager.instance.sounds.rapidCannon = new Sound("music/shotsAudio/PulseLaser6.mp3", 'shotAudio');
+        SoundManager.instance.sounds.powerLaser = new Sound("music/shotsAudio/PowerLaser.mp3", 'shotAudio');
+        SoundManager.instance.sounds.miniPhotonGun = new Sound("music/shotsAudio/MiniPhotonGun.mp3", 'shotAudio');
+        SoundManager.instance.sounds.rocket = new Sound("music/shotsAudio/Rocket.mp3", 'shotAudio');
 
-        function checkCurAudio()
-        {
-            if (curShell === PulseLaser)
-                changeCurAudio(PulseLaserAudio);
-            if (curShell === MiniPowerLaser)
-                changeCurAudio(MiniPowerLaserAudio);
-            if (curShell === GreenLaser)
-                changeCurAudio(GreenLaserAudio);
-            if (curShell === BlueLaser)
-                changeCurAudio(BlueLaserAudio);
-            if (curShell === RapidCannon)
-                changeCurAudio(RapidCannonAudio);
-            if (curShell === PowerLaser)
-                changeCurAudio(PowerLaserAudio);
-            if (curShell === MiniPhotonGun)
-                changeCurAudio(MiniPhotonGunAudio);
-            if (curShell === Rocket)
-                changeCurAudio(RocketAudio);
-        }
+
+        // channels
+        // channels[channelId]
+        // if (!channels[channelId])
+        // {
+        //     channels[channelId] = созать канал
+        // }
+        // channels[channelId].src = ...
+        // channels['explosions'] = ...
+
+        // function addBackgroundAudio(typeAudio)
+        // {
+        //     let curAudio = new typeAudio();
+        //     let audio = document.createElement('audio');
+        //     audio.setAttribute('id', curAudio.id);
+        //     audio.setAttribute('src', curAudio.src);
+        //     audio.setAttribute('autoplay', curAudio.autoplay);
+        //     audio.setAttribute('loop', curAudio.loop);
+        //     document.body.appendChild(audio);
+        // }
+
+        // function addShotAudio(typeAudio)
+        // {
+        //     let curAudio = new typeAudio();
+        //     let audio = document.createElement('audio');
+        //     audio.setAttribute('id', curAudio.id);
+        //     audio.setAttribute('src', curAudio.src);
+        //     document.body.appendChild(audio);
+        // }
+
+        // function changeCurAudio(typeAudio)
+        // {
+        //     let curAudio = new typeAudio();
+        //     let audio = document.getElementById(curAudio.id);
+        //     if (curAudio.id === 'backgroundMusic')
+        //         audio.setAttribute('src', curAudio.src);
+        //     if (curAudio.id === 'ShotAudio')
+        //         audio.setAttribute('src', curAudio.src);
+        //     audio.setAttribute('autoplay', 'autoplay');
+        // }
+
+        // function checkCurAudio()
+        // {
+        //     if (curShell === PulseLaser)
+        //         changeCurAudio(PulseLaserAudio);
+        //     if (curShell === MiniPowerLaser)
+        //         changeCurAudio(MiniPowerLaserAudio);
+        //     if (curShell === GreenLaser)
+        //         changeCurAudio(GreenLaserAudio);
+        //     if (curShell === BlueLaser)
+        //         changeCurAudio(BlueLaserAudio);
+        //     if (curShell === RapidCannon)
+        //         changeCurAudio(RapidCannonAudio);
+        //     if (curShell === PowerLaser)
+        //         changeCurAudio(PowerLaserAudio);
+        //     if (curShell === MiniPhotonGun)
+        //         changeCurAudio(MiniPhotonGunAudio);
+        //     if (curShell === Rocket)
+        //         changeCurAudio(RocketAudio);
+        // }
 
 
 // --------------------------------------------------------------------------------
@@ -320,6 +395,7 @@ window.addEventListener('load', function ()
         AbstractFlyingObject.prototype.life = 0;
         AbstractFlyingObject.prototype.addScore = 0;
         AbstractFlyingObject.prototype.image = '';
+        AbstractFlyingObject.prototype.distanseAsteroidRatio = 1;
 
         AbstractFlyingObject.prototype.draw = function ()
         {
@@ -348,28 +424,34 @@ window.addEventListener('load', function ()
 
         Asteroid1.prototype = new AbstractFlyingObject();
         Asteroid1.prototype.type = 'asteroid';
+        Asteroid1.prototype.distanseAsteroidRatio = 0.85;
 
 
         // осколок астероидa
         function Splinter(size, x, y, dx, dy)
         {
-            this.size = size / 5;
+            this.size = size;
             this.x = x;
             this.y = y;
+            this.accelerateX = getRandomFloat(-4, 4);
+            this.accelerateY = getRandomFloat(-6, 4);
             this.dx = dx + this.accelerateX;
             this.dy = dy + this.accelerateY;
-            this.accelerateX = Math.round(getRandomFloat(-4, 4));
-            this.accelerateY = Math.round(getRandomFloat(-4, 4));
-            this.life = this.size;
+            if (Math.round(this.dx) === 0 && Math.round(this.dy) === 0)
+            {
+                this.dy = 1;
+                this.dx = getRandomFloat(-2, 2);
+            }
+            this.life = this.size / 3;
             this.addScore = this.size / 2;
             this.image = images['splinter' + Math.round(getRandomFloat(1, 13))];
-
         }
 
-        Splinter.prototype = new Asteroid1();
+        Splinter.prototype = new AbstractFlyingObject();
         Splinter.prototype.type = 'splinter';
         Splinter.prototype.accelerateX = 0;
         Splinter.prototype.accelerateY = 0;
+        Asteroid1.prototype.distanseAsteroidRatio = 1.2;
 
 
         // --------------------------------------------------------------------------------
@@ -381,12 +463,25 @@ window.addEventListener('load', function ()
 
         let countAsteroid = 0;
 
-        function addAsteroids(amount, typeAsteroid)
+        function addAsteroids(amount)
+        {
+            if (gameState === 'game')
+            {
+                for (let i = 0; i < amount; i++)
+                {
+                    let asteroid = new Asteroid1;
+                    asteroids.push(asteroid);
+                }
+            }
+        }
+
+        function addSplinters(amount, size, x, y, dx, dy)
         {
             for (let i = 0; i < amount; i++)
             {
-                let asteroid = new typeAsteroid();
-                asteroids.push(asteroid);
+                let splinterSize = getRandomFloat(size / 7, size / 5);
+                let splinter = new Splinter(splinterSize, x, y, dx, dy);
+                asteroids.push(splinter);
             }
         }
 
@@ -415,7 +510,7 @@ window.addEventListener('load', function ()
             }
         }
 
-        function intervalAddAsteroid(numAddAsteroid, typeAsteroid, addTime)
+        function intervalAddAsteroids(numAddAsteroid, typeAsteroid, addTime)
         {
             setInterval(function ()
             {
@@ -425,16 +520,14 @@ window.addEventListener('load', function ()
 
         function addAsteroidAfterKill(numAddAsteroids, typeAsteroid)
         {
-            if (gameState === 'game')
+            if (countAsteroid < maxAsteroidsInLevel)
             {
-                if (countAsteroid < maxAsteroidsInLevel)
-                {
-                    addAsteroids(numAddAsteroids, typeAsteroid);
-                    countAsteroid++;
-                }
-                if (!asteroids.length)
-                    gameState = 'postmission';
+                addAsteroids(numAddAsteroids, typeAsteroid);
+                countAsteroid += numAddAsteroids;
             }
+            if (countAsteroid >= maxAsteroidsInLevel && asteroids.length < 7)
+                gameState = 'postmission';
+
         }
 
 
@@ -493,7 +586,7 @@ window.addEventListener('load', function ()
         AbstractShip.prototype.x = 0;
         AbstractShip.prototype.y = 0;
         AbstractShip.prototype.life = 0;
-        AbstractShip.prototype.recoveryShieldHPerTick = 0.03;
+        AbstractShip.prototype.recoveryShieldHPerTick = 0.05;
         AbstractShip.prototype.image = images.ship1;
 
         AbstractShip.prototype.draw = function ()
@@ -623,6 +716,9 @@ window.addEventListener('load', function ()
         AbstractShell.prototype.timeoutFiringRate = 100;
         AbstractShell.prototype.power = 10;
         AbstractShell.prototype.image = images.shell1;
+        AbstractShell.prototype.explosionDistance = 0;
+        AbstractShell.prototype.distanseShellRatio = 1;
+        AbstractShell.prototype.sound = SoundManager.instance.sounds.pulseLaser;
 
         AbstractShell.prototype.draw = function ()
         {
@@ -634,7 +730,7 @@ window.addEventListener('load', function ()
         };
 
 
-        // импульсный лазер (оружие 1)
+        // импульсный лазер
         function PulseLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -642,7 +738,12 @@ window.addEventListener('load', function ()
         }
 
         PulseLaser.prototype = new AbstractShell;
+        PulseLaser.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height);
+        };
 
+        // мини версия мощного лазера
         function MiniPowerLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -654,8 +755,10 @@ window.addEventListener('load', function ()
         MiniPowerLaser.prototype.timeoutFiringRate = 120;
         MiniPowerLaser.prototype.power = 15;
         MiniPowerLaser.prototype.image = images.shell2;
+        MiniPowerLaser.prototype.distanseShellRatio = 0.9;
+        MiniPowerLaser.prototype.sound = SoundManager.instance.sounds.miniPowerLaser;
 
-        // 2ой лазер (оружие 2)
+        // сдвоеный лазер
         function GreenLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -667,8 +770,14 @@ window.addEventListener('load', function ()
         GreenLaser.prototype.timeoutFiringRate = 130;
         GreenLaser.prototype.power = 20;
         GreenLaser.prototype.image = images.shell3;
+        GreenLaser.prototype.distanseShellRatio = 1.2;
+        GreenLaser.prototype.sound = SoundManager.instance.sounds.greenLaser;
+        GreenLaser.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height);
+        };
 
-        // 3ой лазер (оружие 3)
+        // строенный лазер
         function BlueLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -680,7 +789,14 @@ window.addEventListener('load', function ()
         BlueLaser.prototype.timeoutFiringRate = 160;
         BlueLaser.prototype.power = 30;
         BlueLaser.prototype.image = images.shell4;
+        BlueLaser.prototype.distanseShellRatio = 1.25;
+        BlueLaser.prototype.sound = SoundManager.instance.sounds.blueLaser;
+        BlueLaser.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height);
+        };
 
+        // импульсная пушка
         function RapidCannon()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -692,13 +808,15 @@ window.addEventListener('load', function ()
         RapidCannon.prototype.timeoutFiringRate = 120;
         RapidCannon.prototype.power = 27;
         RapidCannon.prototype.image = images.shell2;
+        RapidCannon.prototype.distanseShellRatio = 1.2;
+        RapidCannon.prototype.sound = SoundManager.instance.sounds.rapidCannon;
 
         RapidCannon.prototype.draw = function ()
         {
-            context.drawImage(this.image, this.x - 21, this.y - 5, 40, 20);
+            context.drawImage(this.image, this.x - 21, this.y - 15, 40, 20);
         };
 
-        // мощный лазер (оружие 4)
+        // мощный лазер
         function PowerLaser()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -706,17 +824,19 @@ window.addEventListener('load', function ()
         }
 
         PowerLaser.prototype = new AbstractShell;
-        PowerLaser.prototype.dy = 20;
+        PowerLaser.prototype.dy = 10;
         PowerLaser.prototype.timeoutFiringRate = 380;
-        PowerLaser.prototype.power = 100;
+        PowerLaser.prototype.power = 120;
         PowerLaser.prototype.image = images.shell2;
+        PowerLaser.prototype.distanseShellRatio = 1.2;
+        PowerLaser.prototype.sound = SoundManager.instance.sounds.powerLaser;
 
         PowerLaser.prototype.draw = function ()
         {
-            context.drawImage(this.image, this.x - 21, this.y - 20, 40, 80);
+            context.drawImage(this.image, this.x - 16, this.y - 60, 30, 100);
         };
 
-        // мини фотонная пушка (оружие 5)
+        // мини фотонная пушка
         function MiniPhotonGun()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -725,18 +845,19 @@ window.addEventListener('load', function ()
 
         MiniPhotonGun.prototype = new AbstractShell;
         MiniPhotonGun.prototype.dy = 25;
-        MiniPhotonGun.prototype.offsetStartY = 35;
-        MiniPhotonGun.prototype.timeoutFiringRate = 500;
-        MiniPhotonGun.prototype.power = 140;
+        MiniPhotonGun.prototype.offsetStartY = 15;
+        MiniPhotonGun.prototype.timeoutFiringRate = 600;
+        MiniPhotonGun.prototype.power = 160;
         MiniPhotonGun.prototype.image = images.shell5;
+        MiniPhotonGun.prototype.distanseShellRatio = 1.3;
+        MiniPhotonGun.prototype.sound = SoundManager.instance.sounds.miniPhotonGun;
 
         MiniPhotonGun.prototype.draw = function ()
         {
-            context.drawImage(this.image, this.x - 21, this.y - 20);
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
         };
 
-
-        // ракета (оружие 6)
+        // ракета
         function Rocket()
         {
             this.hpPerSec = this.power * 1000 / this.timeoutFiringRate;
@@ -746,12 +867,17 @@ window.addEventListener('load', function ()
         Rocket.prototype = new AbstractShell;
         Rocket.prototype.dy = 5;
         Rocket.prototype.offsetStartY = 5;
-        Rocket.prototype.timeoutFiringRate = 500;
+        Rocket.prototype.timeoutFiringRate = 400;
         Rocket.prototype.power = 180;
         Rocket.prototype.image = images.rocket1;
+        Rocket.prototype.distanseShellRatio = 1.7;
+        Rocket.prototype.sound = SoundManager.instance.sounds.rocket;
+        Rocket.prototype.draw = function ()
+        {
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2 - 15);
+        };
 
-
-        // мега фотонная пушка (оружие7)
+        // мега фотонная пушка
 
         // function PhotonGun()
         // {
@@ -788,10 +914,11 @@ window.addEventListener('load', function ()
                 changeCurShellTo(RapidCannon);
             else if (score >= 2500 && score < 3000)
                 changeCurShellTo(PowerLaser);
-            else if (score >= 3000 && score < 3500)
+            else if (score >= 3000 && score < 5500)
                 changeCurShellTo(MiniPhotonGun);
-            else if (score >= 3500)
+            else if (score >= 5500)
                 changeCurShellTo(Rocket);
+
             // if (score < 400)
             //     curShell = PulseLaser;
             // else if (score >= 400 && score < 1000)
@@ -829,7 +956,8 @@ window.addEventListener('load', function ()
             shot.y = ship.y - shot.offsetStartY;
             shots.push(shot);
 
-            checkCurAudio();
+            shot.sound.play();
+            // checkCurAudio();
         }
 
         function drawShots()
@@ -1146,13 +1274,7 @@ window.addEventListener('load', function ()
                     let dy = asteroid.y - ship.y;
                     let distanse = Math.sqrt(dx * dx + dy * dy);
 
-                    let distanseAsteroidRatio;
-                    if (asteroid.type === 'asteroid')
-                        distanseAsteroidRatio = 0.9;
-                    if (asteroid.type === 'splinter')
-                        distanseAsteroidRatio = 1;
-
-                    let colissionDistanse = (asteroid.size / 2 + ship.size / 2) * distanseAsteroidRatio;
+                    let colissionDistanse = (asteroid.size / 2 + ship.size / 2) * asteroid.distanseAsteroidRatio;
 
                     if (distanse <= colissionDistanse)
                     {
@@ -1183,59 +1305,58 @@ window.addEventListener('load', function ()
                     let dy = asteroid.y - shot.y;
                     let distanse = Math.sqrt(dx * dx + dy * dy);
 
-                    let distanseAsteroidRatio;
-                    if (asteroid.type === 'asteroid')
-                        distanseAsteroidRatio = 0.85;
-                    else if (asteroid.type === 'splinter')
-                        distanseAsteroidRatio = 0.99;
-                    else
-                        distanseAsteroidRatio = 1;
+                    let colissionDistanse = (asteroid.size / 2) * asteroid.distanseAsteroidRatio * shot.distanseShellRatio + shot.explosionDistance;
 
-                    let distanseShellRatio;
-                    if (curShell === Rocket)
-                        distanseShellRatio = 1.5;
-                    else if (curShell === MiniPhotonGun)
-                        distanseShellRatio = 1.2;
-                    else if (curShell === RapidCannon)
-                        distanseShellRatio = 1.1;
-                    else if (curShell === BlueLaser)
-                        distanseShellRatio = 1.1;
-                    else if (curShell === GreenLaser)
-                        distanseShellRatio = 1.05;
-                    else if (curShell === PowerLaser)
-                        distanseShellRatio = 1.05;
-                    else
-                        distanseShellRatio = 1;
 
-                    let colissionDistanse = (asteroid.size / 2) * distanseAsteroidRatio * distanseShellRatio;
                     if (distanse <= colissionDistanse)
                     {
                         asteroid.life -= shot.power;
+
+                        if (curShell === MiniPhotonGun)
+                        {
+                            shot.power -= asteroid.size;
+                            if (shot.power <= 0)
+                            {
+                                shots.splice(j, 1);
+                                j--;
+                            }
+                        }
+                        else if (curShell === Rocket)
+                        {
+                            if (shot.explosionDistance === 0)
+                            {
+                                shot.explosionDistance = 50;
+                                shot.power /= 2;
+                                setTimeout(function ()
+                                {
+                                    shots.splice(j, 1);
+                                    j--;
+                                }, 100);
+                            }
+                        }
+                        else
+                        {
+                            shots.splice(j, 1);
+                            j--;
+                        }
 
                         if (asteroid.life <= 0)
                         {
                             if (asteroid.type === 'asteroid')
                             {
                                 addAsteroidAfterKill(1, Asteroid1);
+                                addSplinters((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
                                 // addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
-                                // addAsteroidAfterKill(3/*(Math.floor(asteroid.size / 30)) * 2*/, Splinter(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
-                                let size = asteroid.size;
-                                let x = asteroid.x;
-                                let y = asteroid.y;
-                                let dx = asteroid.dx;
-                                let dy = asteroid.dy;
-                                // addAsteroids(3, Splinter(size, x, y, dx, dy));
-                                // addAsteroids(3, Splinter(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
                             }
                             if (asteroid.type === 'splinter')
                             {
-                                addScore(asteroid.addScore);
                                 // addExplosion(SplinterExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 500));
                             }
 
                             addScore(asteroid.addScore);
                             asteroids.splice(i, 1);
                             i--;
+
                         }
                         else
                         {
@@ -1249,9 +1370,6 @@ window.addEventListener('load', function ()
                             // else
                             //     addExplosion(ShellExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0, 500));
                         }
-
-                        shots.splice(j, 1);
-                        j--;
                     }
                 }
             }
@@ -1286,7 +1404,8 @@ window.addEventListener('load', function ()
             {
                 setTimeout(function ()
                 {
-                    changeCurAudio(GameOverAudio);
+                    SoundManager.instance.sounds.gameOver.play();
+
                     gameOverTime = false;
                 }, 500);
             }
@@ -1595,10 +1714,9 @@ window.addEventListener('load', function ()
         // --------------------------------------------------------------------------------
 
         addShip(Playership1);
-        addBackgroundAudio(Level1Audio);
-        addShotAudio(PulseLaserAudio);
+        SoundManager.instance.sounds.level1.play();
         addBackground(Background1);
-        intervalAddAsteroid(1, Asteroid1, 10000);
+        intervalAddAsteroids(1, Asteroid1, 10000);
         setInterval(tick, 1000 / 60);
         tick();
     }
