@@ -465,13 +465,14 @@ window.addEventListener('load', function ()
 
         function addAsteroids(amount)
         {
-            if (gameState === 'game')
+            if (gameState === 'game' && countAsteroid < maxAsteroidsInLevel)
             {
                 for (let i = 0; i < amount; i++)
                 {
                     let asteroid = new Asteroid1;
                     asteroids.push(asteroid);
                 }
+                countAsteroid += amount;
             }
         }
 
@@ -505,7 +506,7 @@ window.addEventListener('load', function ()
                     asteroids.splice(i, 1);
                     i--;
                     if (asteroid.type === 'asteroid')
-                        addAsteroidAfterKill(1, Asteroid1);
+                        addAsteroids(1, Asteroid1);
                 }
             }
         }
@@ -514,60 +515,9 @@ window.addEventListener('load', function ()
         {
             setInterval(function ()
             {
-                addAsteroidAfterKill(numAddAsteroid, typeAsteroid);
+                addAsteroids(numAddAsteroid, typeAsteroid);
             }, addTime)
         }
-
-        function addAsteroidAfterKill(numAddAsteroids, typeAsteroid)
-        {
-            if (countAsteroid < maxAsteroidsInLevel)
-            {
-                addAsteroids(numAddAsteroids, typeAsteroid);
-                countAsteroid += numAddAsteroids;
-            }
-            if (countAsteroid >= maxAsteroidsInLevel && asteroids.length < 7)
-                gameState = 'postmission';
-
-        }
-
-
-        // --------------------------------------------------------------------------------
-        // осколки астероидов
-        // --------------------------------------------------------------------------------
-        // let splinters = [];
-        //
-        // function addSplinter(amount)
-        // {
-        //     for (let i = 0; i < amount; i++)
-        //     {
-        //         let splinter = new Splinter();
-        //         splinters.push(splinter);
-        //     }
-        // }
-        //
-        // function drawSplinter()
-        // {
-        //     for (let i = 0; i < splinters.length; i++)
-        //     {
-        //         let splinter = splinters[i];
-        //         context.drawImage(splinter.image, splinter.x - splinter.image.width / 2, splinter.y - splinter.image.width / 2/*, splinter.size, splinter.size*/);
-        //     }
-        //
-        // }
-        // function moveSplinter()
-        // {
-        //     for (let i = 0; i < splinters.length; i++)
-        //     {
-        //         let splinter = splinters[i];
-        //         splinter.x += splinter.dx + splinter.accelerateX;
-        //         splinter.y += splinter.dy + splinter.accelerateY;
-        //         if (splinter.y >= 1000 || splinter.x < -90 || splinter.x > 690)
-        //         {
-        //             splinters.splice(i, 1);
-        //             i--;
-        //         }
-        //     }
-        // }
 
 
 // --------------------------------------------------------------------------------
@@ -719,7 +669,6 @@ window.addEventListener('load', function ()
         AbstractShell.prototype.explosionDistance = 0;
         AbstractShell.prototype.distanseShellRatio = 1;
         AbstractShell.prototype.sound = SoundManager.instance.sounds.pulseLaser;
-
         AbstractShell.prototype.physicsOfCollisionShell = function (i, j)
         {
             shots.splice(j, 1);
@@ -727,7 +676,6 @@ window.addEventListener('load', function ()
                 j = j - 1;
             return j;
         };
-
         AbstractShell.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
@@ -818,7 +766,6 @@ window.addEventListener('load', function ()
         RapidCannon.prototype.image = images.shell2;
         RapidCannon.prototype.distanseShellRatio = 1.2;
         RapidCannon.prototype.sound = SoundManager.instance.sounds.rapidCannon;
-
         RapidCannon.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - 21, this.y - 15, 40, 20);
@@ -838,7 +785,6 @@ window.addEventListener('load', function ()
         PowerLaser.prototype.image = images.shell2;
         PowerLaser.prototype.distanseShellRatio = 1.2;
         PowerLaser.prototype.sound = SoundManager.instance.sounds.powerLaser;
-
         PowerLaser.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - 16, this.y - 60, 30, 100);
@@ -859,7 +805,6 @@ window.addEventListener('load', function ()
         MiniPhotonGun.prototype.image = images.shell5;
         MiniPhotonGun.prototype.distanseShellRatio = 1.3;
         MiniPhotonGun.prototype.sound = SoundManager.instance.sounds.miniPhotonGun;
-
         MiniPhotonGun.prototype.physicsOfCollisionShell = function (i, j)
         {
             let asteroid = asteroids[i];
@@ -893,7 +838,6 @@ window.addEventListener('load', function ()
         {
             context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2 - 15);
         };
-
         Rocket.prototype.physicsOfCollisionShell = function (i, j)
         {
             let shot = shots[j];
@@ -1316,7 +1260,7 @@ window.addEventListener('load', function ()
                         // addExplosion(AsteroidExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
 
                         if (asteroid.type === 'asteroid')
-                            addAsteroidAfterKill(1, Asteroid1);
+                            addAsteroids(1, Asteroid1);
 
                         asteroids.splice(i, 1);
                         i--;
@@ -1352,7 +1296,7 @@ window.addEventListener('load', function ()
                         {
                             if (asteroid.type === 'asteroid')
                             {
-                                addAsteroidAfterKill(1, Asteroid1);
+                                addAsteroids(1, Asteroid1);
                                 addSplinters((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
                                 // addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
                             }
@@ -1430,6 +1374,20 @@ window.addEventListener('load', function ()
                 context.font = 'italic 20pt Calibri';
                 context.fillText(text, 300, 520);
             }
+        }
+
+        function checkPostmission()
+        {
+            let checkAsteroid = [];
+
+            for (let i = 0; i < asteroids.length; i++)
+            {
+                let asteroid = asteroids[i];
+                if (asteroid.type === 'asteroid')
+                    checkAsteroid.push(asteroid);
+            }
+            if (countAsteroid >= maxAsteroidsInLevel && checkAsteroid.length <= 0)
+                gameState = 'postmission';
         }
 
         function drawPostmission(numLevel, text)
@@ -1681,7 +1639,7 @@ window.addEventListener('load', function ()
 // --------------------------------------------------------------------------------
 
         // предельное количество элементов, задается от уровня
-        let maxAsteroidsInLevel = 800;
+        let maxAsteroidsInLevel = 100;
 
         function tick()
         {
@@ -1697,6 +1655,7 @@ window.addEventListener('load', function ()
                 recoveryShield();
             }
             premissionTimeout();
+            checkPostmission();
             gameOverTimeout();
 
             drawBackground();
@@ -1710,10 +1669,6 @@ window.addEventListener('load', function ()
             drawScore();
             drawPremission(1, 'the spacecraft enters the asteroid field');
             drawPostmission(1, 'the asteroid field is successfully completed');
-            // checkPlayershipAndAsteroidsCollisions();
-            // checkPlayershipAndSplintersCollisions();
-            // checkShellsAndAsteroidsCollisions();
-            // checkShellsAndSplintersCollisions();
         }
 
 
