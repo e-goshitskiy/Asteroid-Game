@@ -720,6 +720,14 @@ window.addEventListener('load', function ()
         AbstractShell.prototype.distanseShellRatio = 1;
         AbstractShell.prototype.sound = SoundManager.instance.sounds.pulseLaser;
 
+        AbstractShell.prototype.physicsOfCollisionShell = function (i, j)
+        {
+            shots.splice(j, 1);
+            if (j > 0)
+                j = j - 1;
+            return j;
+        };
+
         AbstractShell.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
@@ -852,9 +860,18 @@ window.addEventListener('load', function ()
         MiniPhotonGun.prototype.distanseShellRatio = 1.3;
         MiniPhotonGun.prototype.sound = SoundManager.instance.sounds.miniPhotonGun;
 
-        MiniPhotonGun.prototype.draw = function ()
+        MiniPhotonGun.prototype.physicsOfCollisionShell = function (i, j)
         {
-            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
+            let asteroid = asteroids[i];
+            let shot = shots[j];
+            shot.power -= asteroid.size;
+            if (shot.power <= 0)
+            {
+                shots.splice(j, 1);
+                if (j > 0)
+                    j = j - 1;
+                return j;
+            }
         };
 
         // ракета
@@ -867,7 +884,7 @@ window.addEventListener('load', function ()
         Rocket.prototype = new AbstractShell;
         Rocket.prototype.dy = 5;
         Rocket.prototype.offsetStartY = 5;
-        Rocket.prototype.timeoutFiringRate = 400;
+        Rocket.prototype.timeoutFiringRate = 500;
         Rocket.prototype.power = 180;
         Rocket.prototype.image = images.rocket1;
         Rocket.prototype.distanseShellRatio = 1.7;
@@ -875,6 +892,23 @@ window.addEventListener('load', function ()
         Rocket.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2 - 15);
+        };
+
+        Rocket.prototype.physicsOfCollisionShell = function (i, j)
+        {
+            let shot = shots[j];
+            if (shot.explosionDistance === 0)
+            {
+                shot.explosionDistance = 50;
+                shot.power /= 2;
+                setTimeout(function ()
+                {
+                    shots.splice(j, 1);
+                    if (j > 0)
+                        j = j - 1;
+                    return j;
+                }, 100);
+            }
         };
 
         // мега фотонная пушка
@@ -898,26 +932,26 @@ window.addEventListener('load', function ()
         // --------------------------------------------------------------------------------
 
         let shots = [];
-        let curShell = PulseLaser;
+        let curShell = MiniPhotonGun;
 
         function checkCurShell()
         {
-            if (score < 400)
-                curShell = PulseLaser;
-            else if (score >= 400 && score < 1000)
-                changeCurShellTo(MiniPowerLaser);
-            else if (score >= 1000 && score < 1500)
-                changeCurShellTo(GreenLaser);
-            else if (score >= 1500 && score < 2000)
-                changeCurShellTo(BlueLaser);
-            else if (score >= 2000 && score < 2500)
-                changeCurShellTo(RapidCannon);
-            else if (score >= 2500 && score < 3000)
-                changeCurShellTo(PowerLaser);
-            else if (score >= 3000 && score < 5500)
-                changeCurShellTo(MiniPhotonGun);
-            else if (score >= 5500)
-                changeCurShellTo(Rocket);
+            // if (score < 400)
+            //     curShell = PulseLaser;
+            // else if (score >= 400 && score < 1000)
+            //     changeCurShellTo(MiniPowerLaser);
+            // else if (score >= 1000 && score < 1500)
+            //     changeCurShellTo(GreenLaser);
+            // else if (score >= 1500 && score < 2000)
+            //     changeCurShellTo(BlueLaser);
+            // else if (score >= 2000 && score < 2500)
+            //     changeCurShellTo(RapidCannon);
+            // else if (score >= 2500 && score < 3000)
+            //     changeCurShellTo(PowerLaser);
+            // else if (score >= 3000 && score < 5500)
+            //     changeCurShellTo(MiniPhotonGun);
+            // else if (score >= 5500)
+            //     changeCurShellTo(Rocket);
 
             // if (score < 400)
             //     curShell = PulseLaser;
@@ -1312,33 +1346,7 @@ window.addEventListener('load', function ()
                     {
                         asteroid.life -= shot.power;
 
-                        if (curShell === MiniPhotonGun)
-                        {
-                            shot.power -= asteroid.size;
-                            if (shot.power <= 0)
-                            {
-                                shots.splice(j, 1);
-                                j--;
-                            }
-                        }
-                        else if (curShell === Rocket)
-                        {
-                            if (shot.explosionDistance === 0)
-                            {
-                                shot.explosionDistance = 50;
-                                shot.power /= 2;
-                                setTimeout(function ()
-                                {
-                                    shots.splice(j, 1);
-                                    j--;
-                                }, 100);
-                            }
-                        }
-                        else
-                        {
-                            shots.splice(j, 1);
-                            j--;
-                        }
+                        j = shot.physicsOfCollisionShell(i, j);
 
                         if (asteroid.life <= 0)
                         {
