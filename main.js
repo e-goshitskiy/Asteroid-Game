@@ -208,19 +208,24 @@ window.addEventListener('load', function ()
             // this.channels = {};
         }
 
-        SoundManager.instance = new SoundManager;
-        SoundManager.instance.sounds.homeScreen = new Sound("music/home_screen2.mp3", 'backgroundMusic');
-        SoundManager.instance.sounds.level1 = new Sound("music/level.mp3", 'backgroundMusic');
-        SoundManager.instance.sounds.gameOver = new Sound("music/Game_Over.mp3", 'backgroundMusic');
-        SoundManager.instance.sounds.pulseLaser = new Sound("music/shotsAudio/PulseLaser.mp3", 'shotAudio');
-        SoundManager.instance.sounds.miniPowerLaser = new Sound("music/shotsAudio/PulseLaser5.mp3", 'shotAudio');
-        SoundManager.instance.sounds.greenLaser = new Sound("music/shotsAudio/GreenLaser.mp3", 'shotAudio');
-        SoundManager.instance.sounds.blueLaser = new Sound("music/shotsAudio/BlueLaser.mp3", 'shotAudio');
-        SoundManager.instance.sounds.rapidCannon = new Sound("music/shotsAudio/PulseLaser6.mp3", 'shotAudio');
-        SoundManager.instance.sounds.powerLaser = new Sound("music/shotsAudio/PowerLaser.mp3", 'shotAudio');
-        SoundManager.instance.sounds.miniPhotonGun = new Sound("music/shotsAudio/MiniPhotonGun.mp3", 'shotAudio');
-        SoundManager.instance.sounds.rocket = new Sound("music/shotsAudio/Rocket.mp3", 'shotAudio');
+        function initSounds()
+        {
+            SoundManager.instance = new SoundManager;
+            SoundManager.instance.sounds.homeScreen = new Sound("music/home_screen2.mp3", 'backgroundMusic');
+            SoundManager.instance.sounds.level1 = new Sound("music/level.mp3", 'backgroundMusic');
+            SoundManager.instance.sounds.gameOver = new Sound("music/Game_Over.mp3", 'backgroundMusic');
+            SoundManager.instance.sounds.pulseLaser = new Sound("music/shotsAudio/PulseLaser.mp3", 'shotAudio');
+            SoundManager.instance.sounds.miniPowerLaser = new Sound("music/shotsAudio/PulseLaser5.mp3", 'shotAudio');
+            SoundManager.instance.sounds.greenLaser = new Sound("music/shotsAudio/GreenLaser.mp3", 'shotAudio');
+            SoundManager.instance.sounds.blueLaser = new Sound("music/shotsAudio/BlueLaser.mp3", 'shotAudio');
+            SoundManager.instance.sounds.rapidCannon = new Sound("music/shotsAudio/PulseLaser6.mp3", 'shotAudio');
+            SoundManager.instance.sounds.powerLaser = new Sound("music/shotsAudio/PowerLaser.mp3", 'shotAudio');
+            SoundManager.instance.sounds.miniPhotonGun = new Sound("music/shotsAudio/MiniPhotonGun.mp3", 'shotAudio');
+            SoundManager.instance.sounds.rocket = new Sound("music/shotsAudio/Rocket.mp3", 'shotAudio');
 
+        }
+
+        initSounds();
 
         // channels
         // channels[channelId]
@@ -461,7 +466,9 @@ window.addEventListener('load', function ()
 
         let asteroids = [];
 
-        let countAsteroid = 0;
+        let maxAsteroidsInLevel = 100;  // предельное количество элементов, задается от уровня
+
+        let countAsteroid = 0;   // countAsteroid === maxAsteroidsInLevel -- конец уровня
 
         function addAsteroids(amount)
         {
@@ -624,6 +631,7 @@ window.addEventListener('load', function ()
         {
             let ship = new typeShip();
             ships.push(ship);
+            // ships['typeShip'] = new typeShip();
         }
 
         function drawShips()
@@ -830,7 +838,7 @@ window.addEventListener('load', function ()
         Rocket.prototype.dy = 5;
         Rocket.prototype.offsetStartY = 5;
         Rocket.prototype.timeoutFiringRate = 500;
-        Rocket.prototype.power = 180;
+        Rocket.prototype.power = 140;
         Rocket.prototype.image = images.rocket1;
         Rocket.prototype.distanseShellRatio = 1.7;
         Rocket.prototype.sound = SoundManager.instance.sounds.rocket;
@@ -843,8 +851,11 @@ window.addEventListener('load', function ()
             let shot = shots[j];
             if (shot.explosionDistance === 0)
             {
-                shot.explosionDistance = 50;
+                shot.explosionDistance = 70;
                 shot.power /= 2;
+
+                addExplosion(170, shot.x, shot.y - 50, 0, shot.dy / 4, 300);
+
                 setTimeout(function ()
                 {
                     shots.splice(j, 1);
@@ -876,43 +887,26 @@ window.addEventListener('load', function ()
         // --------------------------------------------------------------------------------
 
         let shots = [];
-        let curShell = MiniPhotonGun;
+        let curShell = PulseLaser;
 
         function checkCurShell()
         {
-            // if (score < 400)
-            //     curShell = PulseLaser;
-            // else if (score >= 400 && score < 1000)
-            //     changeCurShellTo(MiniPowerLaser);
-            // else if (score >= 1000 && score < 1500)
-            //     changeCurShellTo(GreenLaser);
-            // else if (score >= 1500 && score < 2000)
-            //     changeCurShellTo(BlueLaser);
-            // else if (score >= 2000 && score < 2500)
-            //     changeCurShellTo(RapidCannon);
-            // else if (score >= 2500 && score < 3000)
-            //     changeCurShellTo(PowerLaser);
-            // else if (score >= 3000 && score < 5500)
-            //     changeCurShellTo(MiniPhotonGun);
-            // else if (score >= 5500)
-            //     changeCurShellTo(Rocket);
-
-            // if (score < 400)
-            //     curShell = PulseLaser;
-            // else if (score >= 400 && score < 1000)
-            //     changeCurShellTo(MiniPowerLaser);
-            // else if (score >= 1000 && score < 2000)
-            //     changeCurShellTo(GreenLaser);
-            // else if (score >= 2000 && score < 3000)
-            //     changeCurShellTo(BlueLaser);
-            // else if (score >= 3000 && score < 4000)
-            //     changeCurShellTo(RapidCannon);
-            // else if (score >= 4000 && score < 5000)
-            //     changeCurShellTo(PowerLaser);
-            // else if (score >= 5000 && score < 6000)
-            //     changeCurShellTo(MiniPhotonGun);
-            // else if (score >= 6000)
-            //     changeCurShellTo(Rocket);
+            if (score < 400)
+                curShell = PulseLaser;
+            else if (score >= 400 && score < 1000)
+                changeCurShellTo(MiniPowerLaser);
+            else if (score >= 1000 && score < 1500)
+                changeCurShellTo(GreenLaser);
+            else if (score >= 1500 && score < 2000)
+                changeCurShellTo(BlueLaser);
+            else if (score >= 2000 && score < 2500)
+                changeCurShellTo(RapidCannon);
+            else if (score >= 2500 && score < 3000)
+                changeCurShellTo(PowerLaser);
+            else if (score >= 3000 && score < 5500)
+                changeCurShellTo(MiniPhotonGun);
+            else if (score >= 5500)
+                changeCurShellTo(Rocket);
         }
 
         function changeCurShellTo(newShell)
@@ -970,7 +964,7 @@ window.addEventListener('load', function ()
 // --------------------------------------------------------------------------------
 
 
-        const MAX_EXPLOSION_LIFETIME = 1000;
+        // const MAX_EXPLOSION_LIFETIME = 1000;
         const EXPLOSION_FRAMES_AMOUNT = 9;
 
         function AbstractExplosion()
@@ -982,12 +976,13 @@ window.addEventListener('load', function ()
         AbstractExplosion.prototype.y = 0;
         AbstractExplosion.prototype.dx = 0;
         AbstractExplosion.prototype.dy = 0;
-        AbstractExplosion.prototype.curentAnimationTime = 0;
+        AbstractExplosion.prototype.curentAnimationTime = 0.01;
         AbstractExplosion.prototype.totalAnimationTime = 0;
-        AbstractExplosion.prototype.image = '';
+        AbstractExplosion.prototype.image = 'explosion1';
 
         AbstractExplosion.prototype.draw = function ()
         {
+            this.image = images['explosion' + Math.ceil(this.curentAnimationTime / this.totalAnimationTime * EXPLOSION_FRAMES_AMOUNT)];
             context.drawImage(this.image, this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
         };
 
@@ -997,63 +992,19 @@ window.addEventListener('load', function ()
             this.y += this.dy;
         };
 
-
         // взрыв астероида
-        function AsteroidExplosion(size, x, y, dx, dy, animationTime)
-        {
-            this.size = size;
-            this.x = x;
-            this.y = y;
-            this.dx = dx / 2;
-            this.dy = dy / 2;
-            this.totalAnimationTime = this.size / 120 * animationTime;
-            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
-            console.log(this.image, this.totalAnimationTime);
-        }
-
-        AsteroidExplosion.prototype = new AbstractExplosion();
-
-        // взрыв осколка
-        function SplinterExplosion(size, x, y, dx, dy, animationTime)
+        function Explosion(size, x, y, dx, dy, maxAnimationTime)
         {
             this.size = size;
             this.x = x;
             this.y = y;
             this.dx = dx;
             this.dy = dy;
-            this.totalAnimationTime = this.size / 120 * animationTime;
-            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
+            this.totalAnimationTime = this.size / 120 * maxAnimationTime;
+            // console.log(this.image, this.totalAnimationTime);
         }
 
-        SplinterExplosion.prototype = new AbstractExplosion();
-
-        // взрыв снаряда
-        function ShellExplosion(size, x, y, dx, dy, animationTime)
-        {
-            this.size = size;
-            this.x = x;
-            this.y = y;
-            this.dx = dx;
-            this.dy = dy;
-            this.totalAnimationTime = this.size / 120 * animationTime;
-            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
-        }
-
-        ShellExplosion.prototype = new AbstractExplosion();
-
-        // взрыв корабля
-        function PlayershipExplosion(size, x, y, dx, dy, animationTime)
-        {
-            this.size = size;
-            this.x = x;
-            this.y = y;
-            this.dx = dx;
-            this.dy = dy;
-            this.totalAnimationTime = this.size / 120 * animationTime;
-            this.image = images['explosion' + (getFrameNumberByAnimationTime(this.curentAnimationTime, MAX_EXPLOSION_LIFETIME, EXPLOSION_FRAMES_AMOUNT))];
-        }
-
-        PlayershipExplosion.prototype = new AbstractExplosion();
+        Explosion.prototype = new AbstractExplosion();
 
 
         // --------------------------------------------------------------------------------
@@ -1062,9 +1013,9 @@ window.addEventListener('load', function ()
 
         let explosions = [];
 
-        function addExplosion(typeExplosion)
+        function addExplosion(size, x, y, dx, dy, maxAnimationTime)
         {
-            let explosion = new typeExplosion();
+            let explosion = new Explosion(size, x, y, dx, dy, maxAnimationTime);
             explosions.push(explosion);
         }
 
@@ -1084,7 +1035,8 @@ window.addEventListener('load', function ()
                 let explosion = explosions[i];
                 explosion.move();
 
-                explosion.curentAnimationTime += tickTime;
+                if (!pause)
+                    explosion.curentAnimationTime += tickTime;
 
                 if (explosion.curentAnimationTime >= explosion.totalAnimationTime)
                 {
@@ -1093,144 +1045,6 @@ window.addEventListener('load', function ()
                 }
             }
         }
-
-        // // --------------------------------------------------------------------------------
-        // // взрывы
-        // // --------------------------------------------------------------------------------
-        //
-        //
-        // let explosions = [];
-        //
-        // const MAX_EXPLOSION_LIFETIME = 1000;
-        // const EXPLOSION_FRAMES_AMOUNT = 9;
-        //
-        //
-        // function addExplosion(size, x, y, dx, dy)
-        // {
-        //     let explosion = {};
-        //
-        //     explosion.size = size / 32;
-        //     explosion.x = x;
-        //     explosion.y = y;
-        //     explosion.dx = dx;
-        //     explosion.dy = dy;
-        //     explosion.animationTime = 0;
-        //     explosion.lifeTime = EXPLOSION_LIFETIME;
-        //
-        //     explosions.push(explosion);
-        // }
-        //
-        //
-        // function drawExplosions()
-        // {
-        //     for (let i = 0; i < explosions.length; i++)
-        //     {
-        //         let explosion = explosions[i];
-        //
-        //         let image = images['explosion' + (getFrameNumberByAnimationTime(explosion.animationTime, explosion.lifeTime, EXPLOSION_FRAMES_AMOUNT) + 1)];
-        //
-        //         context.drawImage(image,
-        //             explosion.x - (image.width * explosion.size) / 2,
-        //             explosion.y - (image.height * explosion.size) / 2,
-        //             (image.width * explosion.size),
-        //             (image.height * explosion.size));
-        //     }
-        // }
-
-        // function drawExplosions()
-        // {
-        //     for (let i = 0; i < explosions.length; i++)
-        //     {
-        //         let explosion = explosions[i];
-        //
-        //         let currentTime = (new Date).getTime();
-        //
-        //         // остановка взрыва при паузе
-        //         if (pause)
-        //             explosion.startTime = explosion.startTime + currentTime - previousTickTime;
-        //         previousTickTime = currentTime;
-        //
-        //
-        //         for (let k = 1; k <= 9; k++)
-        //         {
-        //             if (currentTime <= explosion.startTime + explosion.imageLifeTime * k)
-        //             {
-        //                 context.drawImage(images['explosion' + k], explosion.x - explosion.size / 2, explosion.y - explosion.size / 2, explosion.size, explosion.size);
-        //                 break;
-        //             }
-        //         }
-        //         if (currentTime > explosion.startTime + explosion.lifeTime)
-        //         {
-        //             explosions.splice(i, 1);
-        //             i--;
-        //         }
-        //     }
-        // }
-
-        // let explosions = [];
-        // let previousTickTime = 0;
-        // let timeRatio = 10;  // время жизни взрыва (коэф.)
-        //
-        //
-        // function addExplosion(size, speed, x, offsetX, y, timeRatio)
-        // {
-        //     if (!isGameOver)
-        //     {
-        //         let explosion = {};
-        //         explosion.size = size;
-        //         explosion.speed = speed;
-        //         explosion.x = x;
-        //         explosion.offsetX = offsetX;
-        //         explosion.y = y;
-        //         explosion.lifeTime = Math.round(size * timeRatio);
-        //         explosion.imageLifeTime = Math.round(size * timeRatio / 9);
-        //         explosion.startTime = (new Date).getTime();
-        //         explosions.push(explosion);
-        //     }
-        // }
-        //
-        //
-        // function drawExplosions()
-        // {
-        //     for (let i = 0; i < explosions.length; i++)
-        //     {
-        //         let explosion = explosions[i];
-        //
-        //         let currentTime = (new Date).getTime();
-        //
-        //         // остановка взрыва при паузе
-        //         if (pause)
-        //             explosion.startTime = explosion.startTime + currentTime - previousTickTime;
-        //         previousTickTime = currentTime;
-        //
-        //
-        //         for (let k = 1; k <= 9; k++)
-        //         {
-        //             if (currentTime <= explosion.startTime + explosion.imageLifeTime * k)
-        //             {
-        //                 context.drawImage(images['explosion' + k], explosion.x - explosion.size / 2, explosion.y - explosion.size / 2, explosion.size, explosion.size);
-        //                 break;
-        //             }
-        //         }
-        //         if (currentTime > explosion.startTime + explosion.lifeTime)
-        //         {
-        //             explosions.splice(i, 1);
-        //             i--;
-        //         }
-        //     }
-        //
-        // }
-        //
-        //
-        // function moveExplosions()
-        // {
-        //     for (let i = 0; i < explosions.length; i++)
-        //     {
-        //         let explosion = explosions[i];
-        //         explosion.x += explosion.offsetX / 2;
-        //         explosion.y += explosion.speed / 2;
-        //     }
-        // }
 
 
 // --------------------------------------------------------------------------------
@@ -1257,7 +1071,14 @@ window.addEventListener('load', function ()
                     if (distanse <= colissionDistanse)
                     {
                         ship.life -= asteroid.life;
-                        // addExplosion(AsteroidExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy));
+
+                        // let explosionDx;
+                        // if (dx < 0)
+                        //     explosionDx = dx + asteroid.size / 2;
+                        // else
+                        //     explosionDx = dx - asteroid.size / 2;
+                        // addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), ship.x/* + explosionDx*/, ship.y - 20, 0, 0, 500);
+                        // console.log(ship.image.width * asteroid.size / 2 / dx);
 
                         if (asteroid.type === 'asteroid')
                             addAsteroids(1, Asteroid1);
@@ -1268,7 +1089,12 @@ window.addEventListener('load', function ()
                         if (ship.life <= 0)
                         {
                             ship.life = 0;
-                            // addExplosion(PlayershipExplosion(ship.size * 2, ship.x, ship.y, 0, 0, 500));
+
+                            addExplosion(170, ship.x, ship.y, 0, 0, 1000);
+
+                            ships.splice(k, 1);
+                            k--;
+
                             gameState = 'gameOver';
                         }
                     }
@@ -1298,29 +1124,17 @@ window.addEventListener('load', function ()
                             {
                                 addAsteroids(1, Asteroid1);
                                 addSplinters((Math.floor(asteroid.size / 30)) * 2, asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy);
-                                // addExplosion(AsteroidExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 1000));
                             }
-                            if (asteroid.type === 'splinter')
-                            {
-                                // addExplosion(SplinterExplosion(asteroid.size, asteroid.x, asteroid.y, asteroid.dx, asteroid.dy, 500));
-                            }
+                            addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx / 2, asteroid.dy / 2, 1000);
 
                             addScore(asteroid.addScore);
+
                             asteroids.splice(i, 1);
                             i--;
-
                         }
                         else
                         {
                             addScore(1);
-
-                            // if (curShell === Rocket)
-                            //     addExplosion(ShellExplosion(getRandomFloat(100, 300), shot.x, shot.y, 0, 0, 500));
-                            //
-                            // if (curShell === MiniPhotonGun)
-                            //     addExplosion(ShellExplosion(getRandomFloat(300, 600), shot.x, shot.y, 0, 0, 500));
-                            // else
-                            //     addExplosion(ShellExplosion(getRandomFloat(20, 40), shot.x, shot.y, 0, 0, 500));
                         }
                     }
                 }
@@ -1350,6 +1164,20 @@ window.addEventListener('load', function ()
             }
         }
 
+        function postmissionTimeout()
+        {
+            let checkAsteroid = [];
+
+            for (let i = 0; i < asteroids.length; i++)
+            {
+                let asteroid = asteroids[i];
+                if (asteroid.type === 'asteroid')
+                    checkAsteroid.push(asteroid);
+            }
+            if (countAsteroid >= maxAsteroidsInLevel && checkAsteroid.length <= 0)
+                gameState = 'postmission';
+        }
+
         function gameOverTimeout()
         {
             if (gameState === 'gameOver' && gameOverTime)
@@ -1374,20 +1202,6 @@ window.addEventListener('load', function ()
                 context.font = 'italic 20pt Calibri';
                 context.fillText(text, 300, 520);
             }
-        }
-
-        function checkPostmission()
-        {
-            let checkAsteroid = [];
-
-            for (let i = 0; i < asteroids.length; i++)
-            {
-                let asteroid = asteroids[i];
-                if (asteroid.type === 'asteroid')
-                    checkAsteroid.push(asteroid);
-            }
-            if (countAsteroid >= maxAsteroidsInLevel && checkAsteroid.length <= 0)
-                gameState = 'postmission';
         }
 
         function drawPostmission(numLevel, text)
@@ -1481,6 +1295,15 @@ window.addEventListener('load', function ()
             }
         }
 
+        function drawHitShip(i)
+        {
+            let ship = ships[i];
+
+            context.font = 'italic 25pt Calibri';
+            context.lineWidth = 4;
+            context.strokeRect(10, (80 + 40 * i), 250, 30);
+        }
+
         function recoveryShield()
         {
             if (gameState !== 'gameOver')
@@ -1509,13 +1332,15 @@ window.addEventListener('load', function ()
         function getFrameNumberByAnimationTime(animationTime, totalTime, framesAmount)
         {
             if (animationTime < 0)
-                animationTime = 1;
+                animationTime = 0;
             else if (animationTime > totalTime)
                 animationTime = totalTime;
 
-            let currentFrame = Math.ceil(animationTime / totalTime * framesAmount);
-            if (currentFrame > framesAmount)
-                currentFrame = framesAmount;
+            let normalizedTime = animationTime / totalTime; // animationTime in 0..1
+
+            let currentFrame = Math.floor(normalizedTime * (framesAmount + 1));
+            if (currentFrame > (framesAmount - 1))
+                currentFrame = (framesAmount - 1);
 
             return currentFrame;
         }
@@ -1638,9 +1463,6 @@ window.addEventListener('load', function ()
 // основной цикл
 // --------------------------------------------------------------------------------
 
-        // предельное количество элементов, задается от уровня
-        let maxAsteroidsInLevel = 100;
-
         function tick()
         {
             curTickTime();
@@ -1655,16 +1477,16 @@ window.addEventListener('load', function ()
                 recoveryShield();
             }
             premissionTimeout();
-            checkPostmission();
+            postmissionTimeout();
             gameOverTimeout();
 
             drawBackground();
             drawAsteroids();
+            drawShots();
+            drawShips();
             drawExplosions();
             drawGameOver();
             drawPause();
-            drawShots();
-            drawShips();
             drawLife();
             drawScore();
             drawPremission(1, 'the spacecraft enters the asteroid field');
@@ -1676,8 +1498,9 @@ window.addEventListener('load', function ()
         // инициализация
         // --------------------------------------------------------------------------------
 
+        maxAsteroidsInLevel = 800;  // предельное количество элементов, задается от уровня
         addShip(Playership1);
-        SoundManager.instance.sounds.level1.play();
+        // SoundManager.instance.sounds.level1.play();
         addBackground(Background1);
         intervalAddAsteroids(1, Asteroid1, 10000);
         setInterval(tick, 1000 / 60);
