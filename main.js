@@ -56,38 +56,34 @@ window.addEventListener('load', function ()
         Sound.prototype.src = '';
         Sound.prototype.autoplay = 'autoplay';
         Sound.prototype.loop = 'loop';
+        Sound.prototype.createElementAudio = function ()
+        {
+            channels[this.channel] = this.channel;
+            let audio = document.createElement('audio');
+            audio.setAttribute('id', this.channel);
+            audio.setAttribute('src', this.src);
+            audio.setAttribute('autoplay', this.autoplay);
+            if (this.channel === 'backgroundMusic')
+                audio.setAttribute('loop', this.loop);
+
+            document.body.appendChild(audio);
+            if (this.channel === 'explosionsAudio')
+                setTimeout(function ()
+                {
+                    document.body.removeChild(audio);
+                },5000);
+        };
         Sound.prototype.play = function ()
         {
             if (!channels['backgroundMusic'] && this.channel === 'backgroundMusic')
-            {
-                channels.backgroundMusic = 'backgroundMusic';
-
-                let audio = document.createElement('audio');
-                audio.setAttribute('id', this.channel);
-                audio.setAttribute('src', this.src);
-                audio.setAttribute('autoplay', this.autoplay);
-                audio.setAttribute('loop', this.loop);
-                document.body.appendChild(audio);
-            }
+                this.createElementAudio();
             if (!channels['shotAudio'] && this.channel === 'shotAudio')
-            {
-                channels.shotAudio = 'shotAudio';
-
-                let audio = document.createElement('audio');
-                audio.setAttribute('id', this.channel);
-                audio.setAttribute('src', this.src);
-                audio.setAttribute('autoplay', this.autoplay);
-                document.body.appendChild(audio);
-            }
+                this.createElementAudio();
+            if (this.channel === 'explosionsAudio')
+                this.createElementAudio();
 
             let audio = document.getElementById(this.channel);
-
             audio.setAttribute('src', this.src);
-
-            // audio.setAttribute('autoplay', 'autoplay');
-            //
-            // if (this.channel === 'backgroundMusic')
-            //     audio.setAttribute('loop', this.loop);
         };
 
 
@@ -111,7 +107,8 @@ window.addEventListener('load', function ()
             SoundManager.instance.sounds.powerLaser = new Sound("music/shotsAudio/PowerLaser.mp3", 'shotAudio');
             SoundManager.instance.sounds.miniPhotonGun = new Sound("music/shotsAudio/MiniPhotonGun.mp3", 'shotAudio');
             SoundManager.instance.sounds.rocket = new Sound("music/shotsAudio/Rocket.mp3", 'shotAudio');
-
+            SoundManager.instance.sounds.explosionPlayership = new Sound("music/explosionsAudio/explosionPlayership.mp3", 'explosionsAudio');
+            SoundManager.instance.sounds.explosionAsteroid = new Sound("music/explosionsAudio/explosionAsteroid.mp3", 'explosionsAudio');
         }
 
         initSounds();
@@ -860,7 +857,6 @@ window.addEventListener('load', function ()
             shots.push(shot);
 
             shot.sound.play();
-            // checkCurAudio();
         }
 
         function drawShots()
@@ -1013,6 +1009,8 @@ window.addEventListener('load', function ()
                         if (asteroid.type === 'asteroid')
                             addAsteroids(1, Asteroid1);
 
+                        SoundManager.instance.sounds.explosionAsteroid.play();
+
                         asteroids.splice(i, 1);
                         i--;
 
@@ -1022,10 +1020,16 @@ window.addEventListener('load', function ()
 
                             addExplosion(170, ship.x, ship.y, 0, 0, 1000);
 
+                            SoundManager.instance.sounds.explosionPlayership.play();
+
                             ships.splice(k, 1);
                             k--;
 
-                            gameState = 'gameOver';
+                            setTimeout(function ()
+                            {
+                                gameState = 'gameOver';
+                                SoundManager.instance.sounds.gameOver.play();
+                            }, 500);
                         }
                         else
                             ship.checkIndicatorHitShip();
@@ -1059,6 +1063,8 @@ window.addEventListener('load', function ()
                             }
                             addExplosion(getRandomFloat(asteroid.size / 2, asteroid.size), asteroid.x, asteroid.y, asteroid.dx / 2, asteroid.dy / 2, 1000);
 
+                            SoundManager.instance.sounds.explosionAsteroid.play();
+
                             addScore(asteroid.addScore);
 
                             asteroids.splice(i, 1);
@@ -1081,7 +1087,6 @@ window.addEventListener('load', function ()
         let gameState = 'premission';  // premission, game, postmission, gameOver
         let pause = false;
         let premissionTimeOut = true;
-        let gameOverTime = false;
 
         function gameStateTimeouts()
         {
@@ -1108,16 +1113,16 @@ window.addEventListener('load', function ()
                 if (countAsteroid >= maxAsteroidsInLevel && checkAsteroid.length <= 0)
                     gameState = 'postmission';
             }
-
-            if (gameState === 'gameOver' && !gameOverTime)
-            {
-                SoundManager.instance.sounds.gameOver.play();
-
-                setTimeout(function ()
-                {
-                    gameOverTime = true;
-                }, 500);
-            }
+            // let gameOverTime = false;
+            // if (gameState === 'gameOver' && !gameOverTime)
+            // {
+            //     SoundManager.instance.sounds.gameOver.play();
+            //
+            //     setTimeout(function ()
+            //     {
+            //         gameOverTime = true;
+            //     }, 500);
+            // }
         }
 
         function drawPremission(numLevel, text)
@@ -1148,7 +1153,7 @@ window.addEventListener('load', function ()
 
         function drawGameOver()
         {
-            if (gameOverTime === true)
+            if (gameState === 'gameOver')
             {
                 context.font = '40pt Calibri';
                 context.fillStyle = 'red';
@@ -1384,6 +1389,7 @@ window.addEventListener('load', function ()
         function tick()
         {
             curTickTime();
+            gameStateTimeouts();
             if (!pause)
             {
                 moveAsteroids();
@@ -1393,8 +1399,6 @@ window.addEventListener('load', function ()
                 moveBackground();
                 gameEngine();
             }
-            gameStateTimeouts();
-
             drawBackground();
             drawAsteroids();
             drawShots();
