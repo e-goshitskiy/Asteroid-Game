@@ -6,10 +6,9 @@ window.addEventListener('load', function ()
         let context = canvas.getContext('2d');
 
 
-        // --------------------------------------------------------------------------------
-        // изображения
-        // --------------------------------------------------------------------------------
-
+// --------------------------------------------------------------------------------
+// изображения
+// --------------------------------------------------------------------------------
 
         let images = {};
 
@@ -38,122 +37,12 @@ window.addEventListener('load', function ()
             return image;
         }
 
-
         initImages();
 
 
 // --------------------------------------------------------------------------------
-// набор звук
+// звук
 // --------------------------------------------------------------------------------
-
-        // function AbstractAudio()
-        // {
-        // }
-        //
-        // AbstractAudio.prototype.id = '';
-        // AbstractAudio.prototype.src = '';
-        // AbstractAudio.prototype.autoplay = 'autoplay';
-        // AbstractAudio.prototype.loop = '';
-        // function BackgroundAudio()
-        // {
-        // }
-        //
-        // BackgroundAudio.prototype = new AbstractAudio();
-        // BackgroundAudio.prototype.id = 'backgroundMusic';
-        // BackgroundAudio.prototype.loop = 'loop';
-        //
-        // // главный экран
-        // function HomeScreenAudio()
-        // {
-        // }
-        //
-        // HomeScreenAudio.prototype = new BackgroundAudio();
-        // HomeScreenAudio.prototype.src = "music/home_screen2.mp3";
-        //
-        // // игра вариант 1
-        // function Level1Audio()
-        // {
-        // }
-        //
-        // Level1Audio.prototype = new BackgroundAudio();
-        // Level1Audio.prototype.src = "music/level.mp3";
-        //
-        //
-        // // game over
-        // function GameOverAudio()
-        // {
-        // }
-        //
-        // GameOverAudio.prototype = new BackgroundAudio();
-        // GameOverAudio.prototype.src = "music/Game_Over.mp3";
-        //
-        // function ShotAudio()
-        // {
-        // }
-        //
-        // ShotAudio.prototype = new AbstractAudio();
-        // ShotAudio.prototype.id = 'ShotAudio';
-        //
-        // function PulseLaserAudio()
-        // {
-        // }
-        //
-        // PulseLaserAudio.prototype = new ShotAudio();
-        // PulseLaserAudio.prototype.src = "music/shotsAudio/PulseLaser.mp3";
-        //
-        // function MiniPowerLaserAudio()
-        // {
-        // }
-        //
-        // MiniPowerLaserAudio.prototype = new ShotAudio();
-        // MiniPowerLaserAudio.prototype.src = "music/shotsAudio/PulseLaser5.mp3";
-        //
-        // function GreenLaserAudio()
-        // {
-        // }
-        //
-        // GreenLaserAudio.prototype = new ShotAudio();
-        // GreenLaserAudio.prototype.src = "music/shotsAudio/GreenLaser.mp3";
-        //
-        // function BlueLaserAudio()
-        // {
-        // }
-        //
-        // BlueLaserAudio.prototype = new ShotAudio();
-        // BlueLaserAudio.prototype.src = "music/shotsAudio/BlueLaser.mp3";
-        //
-        // function RapidCannonAudio()
-        // {
-        // }
-        //
-        // RapidCannonAudio.prototype = new ShotAudio();
-        // RapidCannonAudio.prototype.src = "music/shotsAudio/PulseLaser6.mp3";
-        //
-        // function PowerLaserAudio()
-        // {
-        // }
-        //
-        // PowerLaserAudio.prototype = new ShotAudio();
-        // PowerLaserAudio.prototype.src = "music/shotsAudio/PowerLaser.mp3";
-        //
-        // function MiniPhotonGunAudio()
-        // {
-        // }
-        //
-        // MiniPhotonGunAudio.prototype = new ShotAudio();
-        // MiniPhotonGunAudio.prototype.src = "music/shotsAudio/MiniPhotonGun.mp3";
-        //
-        // function RocketAudio()
-        // {
-        // }
-        //
-        // RocketAudio.prototype = new ShotAudio();
-        // RocketAudio.prototype.src = "music/shotsAudio/Rocket.mp3";
-
-
-        // --------------------------------------------------------------------------------
-        // звук
-        // --------------------------------------------------------------------------------
 
         let channels = {};
 
@@ -235,57 +124,6 @@ window.addEventListener('load', function ()
         // }
         // channels[channelId].src = ...
         // channels['explosions'] = ...
-
-        // function addBackgroundAudio(typeAudio)
-        // {
-        //     let curAudio = new typeAudio();
-        //     let audio = document.createElement('audio');
-        //     audio.setAttribute('id', curAudio.id);
-        //     audio.setAttribute('src', curAudio.src);
-        //     audio.setAttribute('autoplay', curAudio.autoplay);
-        //     audio.setAttribute('loop', curAudio.loop);
-        //     document.body.appendChild(audio);
-        // }
-
-        // function addShotAudio(typeAudio)
-        // {
-        //     let curAudio = new typeAudio();
-        //     let audio = document.createElement('audio');
-        //     audio.setAttribute('id', curAudio.id);
-        //     audio.setAttribute('src', curAudio.src);
-        //     document.body.appendChild(audio);
-        // }
-
-        // function changeCurAudio(typeAudio)
-        // {
-        //     let curAudio = new typeAudio();
-        //     let audio = document.getElementById(curAudio.id);
-        //     if (curAudio.id === 'backgroundMusic')
-        //         audio.setAttribute('src', curAudio.src);
-        //     if (curAudio.id === 'ShotAudio')
-        //         audio.setAttribute('src', curAudio.src);
-        //     audio.setAttribute('autoplay', 'autoplay');
-        // }
-
-        // function checkCurAudio()
-        // {
-        //     if (curShell === PulseLaser)
-        //         changeCurAudio(PulseLaserAudio);
-        //     if (curShell === MiniPowerLaser)
-        //         changeCurAudio(MiniPowerLaserAudio);
-        //     if (curShell === GreenLaser)
-        //         changeCurAudio(GreenLaserAudio);
-        //     if (curShell === BlueLaser)
-        //         changeCurAudio(BlueLaserAudio);
-        //     if (curShell === RapidCannon)
-        //         changeCurAudio(RapidCannonAudio);
-        //     if (curShell === PowerLaser)
-        //         changeCurAudio(PowerLaserAudio);
-        //     if (curShell === MiniPhotonGun)
-        //         changeCurAudio(MiniPhotonGunAudio);
-        //     if (curShell === Rocket)
-        //         changeCurAudio(RocketAudio);
-        // }
 
 
 // --------------------------------------------------------------------------------
@@ -532,6 +370,7 @@ window.addEventListener('load', function ()
 // --------------------------------------------------------------------------------
 
         let horisontalMovement = 0;
+        let hitShip = false;
 
         // конструктор кораблей
         function AbstractShip()
@@ -543,12 +382,88 @@ window.addEventListener('load', function ()
         AbstractShip.prototype.x = 0;
         AbstractShip.prototype.y = 0;
         AbstractShip.prototype.life = 0;
-        AbstractShip.prototype.recoveryShieldHPerTick = 0.05;
+        AbstractShip.prototype.recoveryShieldHPerTick = 0.03;
         AbstractShip.prototype.image = images.ship1;
 
         AbstractShip.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
+        };
+
+        AbstractShip.prototype.drawHitShip = function ()
+        {
+            if (hitShip)
+            {
+                context.beginPath();
+                context.lineWidth = 1;
+                context.shadowBlur = 50;
+                context.strokeStyle = 'rgba(48,140,240,0.22)';
+                context.shadowColor = 'rgba(48,140,240,0.22)';
+                context.fillStyle = 'rgba(48,140,240,0.2)';
+                context.arc(this.x, this.y + 5, 25, 90, 2.5 * Math.PI, false);
+                context.stroke();
+                context.fill();
+                context.arc(this.x, this.y + 5, 26, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.24)';
+                context.shadowColor = 'rgba(48,140,240,0.24)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 27, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.26)';
+                context.shadowColor = 'rgba(48,140,240,0.26)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 28, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.28)';
+                context.shadowColor = 'rgba(48,140,240,0.28)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 29, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.26)';
+                context.shadowColor = 'rgba(48,140,240,0.26)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 30, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.24)';
+                context.shadowColor = 'rgba(48,140,240,0.24)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 31, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.22)';
+                context.shadowColor = 'rgba(48,140,240,0.22)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 32, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.20)';
+                context.shadowColor = 'rgba(48,140,240,0.20)';
+                context.arc(this.x, this.y + 5, 33, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.16)';
+                context.shadowColor = 'rgba(48,140,240,0.16)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 34, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.12)';
+                context.shadowColor = 'rgba(48,140,240,0.12)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 35, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.07)';
+                context.shadowColor = 'rgba(48,140,240,0.07)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 36, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.04)';
+                context.shadowColor = 'rgba(48,140,240,0.04)';
+                context.stroke();
+                context.arc(this.x, this.y + 5, 37, 90, 2.5 * Math.PI, false);
+                context.strokeStyle = 'rgba(48,140,240,0.02)';
+                context.shadowColor = 'rgba(48,140,240,0.02)';
+                context.stroke();
+                context.shadowBlur = 0;
+                context.shadowColor = 0;
+            }
+        };
+
+        AbstractShip.prototype.checkIndicatorHitShip = function ()
+        {
+            hitShip = true;
+
+            setTimeout(function ()
+            {
+                hitShip = false;
+            }, 200);
+
         };
 
         AbstractShip.prototype.move = function ()
@@ -641,6 +556,7 @@ window.addEventListener('load', function ()
                 for (let i = 0; i < ships.length; i++)
                 {
                     let ship = ships[i];
+                    ship.drawHitShip();
                     ship.draw();
                 }
             }
@@ -796,6 +712,21 @@ window.addEventListener('load', function ()
         PowerLaser.prototype.draw = function ()
         {
             context.drawImage(this.image, this.x - 16, this.y - 60, 30, 100);
+        };
+        PowerLaser.prototype.physicsOfCollisionShell = function (i, j)
+        {
+            let asteroid = asteroids[i];
+            let shot = shots[j];
+
+            if (asteroid.size < 30)
+                shot.power -= asteroid.size;
+            else
+            {
+                shots.splice(j, 1);
+                if (j > 0)
+                    j = j - 1;
+                return j;
+            }
         };
 
         // мини фотонная пушка
@@ -1061,7 +992,6 @@ window.addEventListener('load', function ()
                 for (let k = 0; k < ships.length; k++)
                 {
                     let ship = ships[k];
-
                     let dx = asteroid.x - ship.x;
                     let dy = asteroid.y - ship.y;
                     let distanse = Math.sqrt(dx * dx + dy * dy);
@@ -1097,6 +1027,8 @@ window.addEventListener('load', function ()
 
                             gameState = 'gameOver';
                         }
+                        else
+                            ship.checkIndicatorHitShip();
                     }
                 }
 
@@ -1149,9 +1081,9 @@ window.addEventListener('load', function ()
         let gameState = 'premission';  // premission, game, postmission, gameOver
         let pause = false;
         let premissionTimeOut = true;
-        let gameOverTime = true;
+        let gameOverTime = false;
 
-        function premissionTimeout()
+        function gameStateTimeouts()
         {
             if (gameState === 'premission' && premissionTimeOut)
             {
@@ -1162,31 +1094,28 @@ window.addEventListener('load', function ()
                     addAsteroids(5, Asteroid1);
                 }, 3000);
             }
-        }
 
-        function postmissionTimeout()
-        {
-            let checkAsteroid = [];
-
-            for (let i = 0; i < asteroids.length; i++)
+            if (gameState === 'game')
             {
-                let asteroid = asteroids[i];
-                if (asteroid.type === 'asteroid')
-                    checkAsteroid.push(asteroid);
+                let checkAsteroid = [];
+
+                for (let i = 0; i < asteroids.length; i++)
+                {
+                    let asteroid = asteroids[i];
+                    if (asteroid.type === 'asteroid')
+                        checkAsteroid.push(asteroid);
+                }
+                if (countAsteroid >= maxAsteroidsInLevel && checkAsteroid.length <= 0)
+                    gameState = 'postmission';
             }
-            if (countAsteroid >= maxAsteroidsInLevel && checkAsteroid.length <= 0)
-                gameState = 'postmission';
-        }
 
-        function gameOverTimeout()
-        {
-            if (gameState === 'gameOver' && gameOverTime)
+            if (gameState === 'gameOver' && !gameOverTime)
             {
+                SoundManager.instance.sounds.gameOver.play();
+
                 setTimeout(function ()
                 {
-                    SoundManager.instance.sounds.gameOver.play();
-
-                    gameOverTime = false;
+                    gameOverTime = true;
                 }, 500);
             }
         }
@@ -1219,7 +1148,7 @@ window.addEventListener('load', function ()
 
         function drawGameOver()
         {
-            if (gameOverTime === false)
+            if (gameOverTime === true)
             {
                 context.font = '40pt Calibri';
                 context.fillStyle = 'red';
@@ -1267,10 +1196,18 @@ window.addEventListener('load', function ()
                 {
                     let ship = ships[i];
 
+                    // восстановление щита
+                    if (gameState === 'game' && !pause)
+                    {
+                        if (ship.life < 499)
+                        {
+                            ship.life += ship.recoveryShieldHPerTick;
+                        }
+                    }
+
+                    // формирование цвета полоски жизни
                     let blueRGB = Math.floor(ship.life / 2);
-
                     let redRGB;
-
                     if (blueRGB > 200)
                         redRGB = 0;
                     else if (blueRGB > 150)
@@ -1286,35 +1223,12 @@ window.addEventListener('load', function ()
                     context.fillRect(10, (80 + 40 * i), ship.life / 2, 30);
                     context.fillStyle = 'black';
                     context.lineWidth = 4;
+                    context.strokeStyle = 'rgba(48,140,240,0.3)';
                     context.strokeRect(10, (80 + 40 * i), 250, 30);
                     context.font = 'italic 18pt Calibri';
                     context.textAlign = 'left';
                     context.fillStyle = '#C8C8FF';
                     context.fillText(('Shield'), 22, (102 + 40 * i));
-                }
-            }
-        }
-
-        function drawHitShip(i)
-        {
-            let ship = ships[i];
-
-            context.font = 'italic 25pt Calibri';
-            context.lineWidth = 4;
-            context.strokeRect(10, (80 + 40 * i), 250, 30);
-        }
-
-        function recoveryShield()
-        {
-            if (gameState !== 'gameOver')
-            {
-                for (let i = 0; i < ships.length; i++)
-                {
-                    let ship = ships[i];
-                    if (ship.life < 499)
-                    {
-                        ship.life += ship.recoveryShieldHPerTick;
-                    }
                 }
             }
         }
@@ -1358,6 +1272,10 @@ window.addEventListener('load', function ()
             lastTime = currentTime;
         }
 
+        function c(i)
+        {
+            console.log(i);
+        }
 
 // --------------------------------------------------------------------------------
 // управление кораблем и выстрелами
@@ -1474,11 +1392,8 @@ window.addEventListener('load', function ()
                 moveExplosions(tickTime);
                 moveBackground();
                 gameEngine();
-                recoveryShield();
             }
-            premissionTimeout();
-            postmissionTimeout();
-            gameOverTimeout();
+            gameStateTimeouts();
 
             drawBackground();
             drawAsteroids();
@@ -1500,11 +1415,10 @@ window.addEventListener('load', function ()
 
         maxAsteroidsInLevel = 800;  // предельное количество элементов, задается от уровня
         addShip(Playership1);
-        // SoundManager.instance.sounds.level1.play();
+        SoundManager.instance.sounds.level1.play();
         addBackground(Background1);
         intervalAddAsteroids(1, Asteroid1, 10000);
         setInterval(tick, 1000 / 60);
-        tick();
     }
 );
 
